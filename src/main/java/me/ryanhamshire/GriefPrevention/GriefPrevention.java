@@ -32,7 +32,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.aikar.commands.BukkitCommandManager;
 import me.ryanhamshire.GriefPrevention.DataStore.NoTransferException;
+import me.ryanhamshire.GriefPrevention.commands.ClaimCommand;
 import me.ryanhamshire.GriefPrevention.events.PreventBlockBreakEvent;
 import me.ryanhamshire.GriefPrevention.events.SaveTrappedPlayerEvent;
 import me.ryanhamshire.GriefPrevention.events.TrustChangedEvent;
@@ -255,8 +257,13 @@ public class GriefPrevention extends JavaPlugin
     {
         AddLogEntry(entry, CustomLogEntryTypes.Debug);
     }
+    private void registerCommands(){
+		BukkitCommandManager commandManager = new BukkitCommandManager(this);
+		commandManager.registerCommand(new ClaimCommand(this));
+	}
 	
 	//initializes well...   everything
+	@Override
 	public void onEnable()
 	{ 		
 	    instance = this;
@@ -267,7 +274,8 @@ public class GriefPrevention extends JavaPlugin
 		this.customLogger = new CustomLogger();
         
 		AddLogEntry("Finished loading configuration.");
-		
+
+		registerCommands();
 		//when datastore initializes, it loads player and claim data, and posts some stats to the log
 		if(this.databaseUrl.length() > 0)
 		{
@@ -3403,7 +3411,7 @@ public class GriefPrevention extends JavaPlugin
     }
     
     //determines whether creative anti-grief rules apply at a location
-	boolean creativeRulesApply(Location location)
+	public boolean creativeRulesApply(Location location)
 	{
 		if(!this.config_creativeWorldsExist) return false;
 
@@ -3641,7 +3649,7 @@ public class GriefPrevention extends JavaPlugin
         return false;
     }
     
-    void autoExtendClaim(Claim newClaim)
+    public void autoExtendClaim(Claim newClaim)
     {
         //auto-extend it downward to cover anything already built underground
         Location lesserCorner = newClaim.getLesserBoundaryCorner();
