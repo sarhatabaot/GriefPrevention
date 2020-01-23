@@ -2871,7 +2871,8 @@ public class GriefPrevention extends JavaPlugin
 	}
 	
 	public enum IgnoreMode	{None, StandardIgnore, AdminIgnore}
-	
+
+	@Deprecated
 	private String trustEntryToPlayerName(String entry)
 	{
         if(entry.startsWith("[") || entry.equals("public"))
@@ -2889,7 +2890,7 @@ public class GriefPrevention extends JavaPlugin
 		return location.getWorld().getName() + ": x" + location.getBlockX() + ", z" + location.getBlockZ();
 	}
 
-	private boolean abandonClaimHandler(Player player, boolean deleteTopLevelClaim) 
+	public boolean abandonClaimHandler(Player player, boolean deleteTopLevelClaim)
 	{
 		PlayerData playerData = this.dataStore.getPlayerData(player.getUniqueId());
 		
@@ -2948,7 +2949,7 @@ public class GriefPrevention extends JavaPlugin
 	}
 
 	//helper method keeps the trust commands consistent and eliminates duplicate code
-	private void handleTrustCommand(Player player, ClaimPermission permissionLevel, String recipientName) 
+	public void handleTrustCommand(Player player, ClaimPermission permissionLevel, String recipientName)
 	{
 		//determine which claim the player is standing in
 		Claim claim = this.dataStore.getClaimAt(player.getLocation(), true /*ignore height*/, null);
@@ -3228,7 +3229,7 @@ public class GriefPrevention extends JavaPlugin
     }
 
     //string overload for above helper
-    static String lookupPlayerName(String playerID)
+    public static String lookupPlayerName(String playerID)
     {
         UUID id;
         try
@@ -3243,7 +3244,8 @@ public class GriefPrevention extends JavaPlugin
         
         return lookupPlayerName(id);
     }
-	
+
+    @Override
 	public void onDisable()
 	{ 
 		//save data for any online players

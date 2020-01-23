@@ -70,7 +70,7 @@ public abstract class DataStore
 	protected ConcurrentHashMap<String, Integer> permissionToBonusBlocksMap = new ConcurrentHashMap<String, Integer>();
 	
 	//in-memory cache for claim data
-	ArrayList<Claim> claims = new ArrayList<Claim>();
+	public ArrayList<Claim> claims = new ArrayList<Claim>();
 	ConcurrentHashMap<Long, ArrayList<Claim>> chunksToClaimsMap = new ConcurrentHashMap<Long, ArrayList<Claim>>();
 	
 	//in-memory cache for messages
@@ -336,7 +336,7 @@ public abstract class DataStore
 	}
 	
     //removes cached player data from memory
-	synchronized void clearCachedPlayerData(UUID playerID)
+	public synchronized void clearCachedPlayerData(UUID playerID)
 	{
 		this.playerNameToPlayerDataMap.remove(playerID);
 	}
@@ -344,17 +344,13 @@ public abstract class DataStore
 	//gets the number of bonus blocks a player has from his permissions
 	//Bukkit doesn't allow for checking permissions of an offline player.
 	//this will return 0 when he's offline, and the correct number when online.
-	synchronized public int getGroupBonusBlocks(UUID playerID)
+	public synchronized int getGroupBonusBlocks(UUID playerID)
 	{
 		int bonusBlocks = 0;
 		Set<String> keys = permissionToBonusBlocksMap.keySet();
-		Iterator<String> iterator = keys.iterator();
-		while(iterator.hasNext())
-		{
-			String groupName = iterator.next();
+		for (final String groupName : keys) {
 			Player player = GriefPrevention.instance.getServer().getPlayer(playerID);
-			if(player != null && player.hasPermission(groupName))
-			{
+			if (player != null && player.hasPermission(groupName)) {
 				bonusBlocks += this.permissionToBonusBlocksMap.get(groupName);
 			}
 		}
@@ -363,7 +359,7 @@ public abstract class DataStore
 	}
 	
 	//grants a group (players with a specific permission) bonus claim blocks as long as they're still members of the group
-	synchronized public int adjustGroupBonusBlocks(String groupName, int amount)
+	public synchronized int adjustGroupBonusBlocks(String groupName, int amount)
 	{
 		Integer currentValue = this.permissionToBonusBlocksMap.get(groupName);
 		if(currentValue == null) currentValue = 0;
