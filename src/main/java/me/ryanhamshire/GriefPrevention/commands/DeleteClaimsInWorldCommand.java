@@ -9,6 +9,7 @@ import me.ryanhamshire.GriefPrevention.TextMode;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 
 
 @CommandAlias("deleteclaimsinworld")
@@ -23,7 +24,7 @@ public class DeleteClaimsInWorldCommand extends GPBaseCommand {
 		//try to find the specified world
 		World world = Bukkit.getServer().getWorld(worldName);
 		if(world == null) {
-			GriefPrevention.sendMessage(consoleCommandSender, TextMode.Err, Messages.WorldNotFound);
+			GriefPrevention.sendMessage((Player)consoleCommandSender, TextMode.Err, Messages.WorldNotFound);
 			return;
 		}
 
