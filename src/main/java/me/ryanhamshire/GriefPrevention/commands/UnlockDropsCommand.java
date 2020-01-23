@@ -1,5 +1,7 @@
 package me.ryanhamshire.GriefPrevention.commands;
 
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.Messages;
@@ -8,11 +10,13 @@ import me.ryanhamshire.GriefPrevention.TextMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+@CommandAlias("unlockdrops")
 public class UnlockDropsCommand extends GPBaseCommand {
 	public UnlockDropsCommand(final GriefPrevention plugin) {
 		super(plugin);
 	}
 
+	@Default
 	public void onUnlockDrops(final Player player, @Optional String name){
 		PlayerData playerData;
 
