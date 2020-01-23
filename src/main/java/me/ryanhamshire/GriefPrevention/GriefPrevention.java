@@ -2116,33 +2116,7 @@ public class GriefPrevention extends JavaPlugin
             GriefPrevention.AddLogEntry("Deleted all claims in world: " + world.getName() + ".", CustomLogEntryTypes.AdminActivity);
             return true;
         }
-		
-		else if(cmd.getName().equalsIgnoreCase("deleteclaimsinworld"))
-        {
-            //must be executed at the console
-            if(player != null)
-            {
-                GriefPrevention.sendMessage(player, TextMode.Err, Messages.ConsoleOnlyCommand);
-                return true;
-            }
-            
-            //requires exactly one parameter, the world name
-            if(args.length != 1) return false;
-            
-            //try to find the specified world
-            World world = Bukkit.getServer().getWorld(args[0]);
-            if(world == null)
-            {
-                GriefPrevention.sendMessage(player, TextMode.Err, Messages.WorldNotFound);
-                return true;
-            }
-            
-            //delete all USER claims in that world
-            this.dataStore.deleteClaimsInWorld(world, false);
-            GriefPrevention.AddLogEntry("Deleted all user claims in world: " + world.getName() + ".", CustomLogEntryTypes.AdminActivity);
-            return true;
-        }
-		
+
 		//claimbook
         else if(cmd.getName().equalsIgnoreCase("claimbook"))
         {
