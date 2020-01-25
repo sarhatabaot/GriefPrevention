@@ -16,7 +16,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.datastore;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,6 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
+import me.ryanhamshire.griefprevention.GriefPrevention;
+import me.ryanhamshire.griefprevention.PlayerData;
+import me.ryanhamshire.griefprevention.UUIDFetcher;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.*;
