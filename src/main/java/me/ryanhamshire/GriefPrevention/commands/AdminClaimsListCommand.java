@@ -1,5 +1,7 @@
 package me.ryanhamshire.GriefPrevention.commands;
 
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.Messages;
@@ -8,13 +10,13 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
+@CommandAlias("adminclaimslist")
 public class AdminClaimsListCommand extends GPBaseCommand {
 	public AdminClaimsListCommand(final GriefPrevention plugin) {
 		super(plugin);
 	}
-
+	@Default
 	public void onAdminClaimsList(final Player player){
 		//find admin claims
 		List<Claim> claims = new ArrayList<>();
