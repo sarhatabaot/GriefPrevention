@@ -19,10 +19,15 @@
 package me.ryanhamshire.griefprevention;
 
 import com.google.common.io.Files;
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.ClaimCreatedEvent;
 import me.ryanhamshire.griefprevention.events.ClaimDeletedEvent;
 import me.ryanhamshire.griefprevention.events.ClaimModifiedEvent;
+import me.ryanhamshire.griefprevention.siege.SecureClaimTask;
+import me.ryanhamshire.griefprevention.siege.SiegeCheckupTask;
+import me.ryanhamshire.griefprevention.siege.SiegeData;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import me.ryanhamshire.griefprevention.visualization.VisualizationType;
 import org.bukkit.Bukkit;
@@ -775,7 +780,7 @@ public abstract class DataStore
 	}
 	
 	//gets an almost-unique, persistent identifier for a chunk
-    static Long getChunkHash(long chunkx, long chunkz)
+    public static Long getChunkHash(long chunkx, long chunkz)
     {
         return (chunkz ^ (chunkx << 32));
     }
@@ -860,7 +865,7 @@ public abstract class DataStore
 		}
 		
 		//creative mode claims always go to bedrock
-		if(Config.config_claims_worldModes.get(world) == ClaimsMode.Creative)
+		if(Config.config_claims_worldModes.get(world) == ClaimsMode.CREATIVE)
 		{
 			smally = 0;
 		}
@@ -1035,7 +1040,7 @@ public abstract class DataStore
 		//why isn't this a "repeating" task?
 		//because depending on the status of the siege at the time the task runs, there may or may not be a reason to run the task again
 		SiegeCheckupTask task = new SiegeCheckupTask(siegeData);
-		siegeData.checkupTaskID = GriefPrevention.instance.getServer().getScheduler().scheduleSyncDelayedTask(GriefPrevention.instance, task, 20L * 30);
+		siegeData.setCheckupTaskID(GriefPrevention.instance.getServer().getScheduler().scheduleSyncDelayedTask(GriefPrevention.instance, task, 20L * 30));
 	}
 	
 	//ends a siege
@@ -1047,51 +1052,51 @@ public abstract class DataStore
 		//determine winner and loser
 		if(winnerName == null && loserName != null)
 		{
-			if(siegeData.attacker.getName().equals(loserName))
+			if(siegeData.getAttacker().getName().equals(loserName))
 			{
-				winnerName = siegeData.defender.getName();
+				winnerName = siegeData.getDefender().getName();
 			}
 			else
 			{
-				winnerName = siegeData.attacker.getName();
+				winnerName = siegeData.getAttacker().getName();
 			}
 		}
 		else if(winnerName != null && loserName == null)
 		{
-			if(siegeData.attacker.getName().equals(winnerName))
+			if(siegeData.getAttacker().getName().equals(winnerName))
 			{
-				loserName = siegeData.defender.getName();
+				loserName = siegeData.getDefender().getName();
 			}
 			else
 			{
-				loserName = siegeData.attacker.getName();
+				loserName = siegeData.getAttacker().getName();
 			}
 		}
 		
 		//if the attacker won, plan to open the doors for looting
-		if(siegeData.attacker.getName().equals(winnerName))
+		if(siegeData.getAttacker().getName().equals(winnerName))
 		{
 			grantAccess = true;
 		}
 		
-		PlayerData attackerData = this.getPlayerData(siegeData.attacker.getUniqueId());
+		PlayerData attackerData = this.getPlayerData(siegeData.getAttacker().getUniqueId());
 		attackerData.siegeData = null;
 		
-		PlayerData defenderData = this.getPlayerData(siegeData.defender.getUniqueId());	
+		PlayerData defenderData = this.getPlayerData(siegeData.getDefender().getUniqueId());
 		defenderData.siegeData = null;
 		defenderData.lastSiegeEndTimeStamp = System.currentTimeMillis();
 
 		//start a cooldown for this attacker/defender pair
 		Long now = Calendar.getInstance().getTimeInMillis();
 		Long cooldownEnd = now + 1000 * 60 * Config.config_siege_cooldownEndInMinutes;  //one hour from now
-		this.siegeCooldownRemaining.put(siegeData.attacker.getName() + "_" + siegeData.defender.getName(), cooldownEnd);
+		this.siegeCooldownRemaining.put(siegeData.getAttacker().getName() + "_" + siegeData.getDefender().getName(), cooldownEnd);
 		
 		//start cooldowns for every attacker/involved claim pair
-		for(int i = 0; i < siegeData.claims.size(); i++)
+		for(int i = 0; i < siegeData.getClaims().size(); i++)
 		{
-			Claim claim = siegeData.claims.get(i);
+			Claim claim = siegeData.getClaims().get(i);
 			claim.siegeData = null;
-			this.siegeCooldownRemaining.put(siegeData.attacker.getName() + "_" + claim.getOwnerName(), cooldownEnd);
+			this.siegeCooldownRemaining.put(siegeData.getAttacker().getName() + "_" + claim.getOwnerName(), cooldownEnd);
 			
 			//if doors should be opened for looting, do that now
 			if(grantAccess)
@@ -1101,7 +1106,7 @@ public abstract class DataStore
 		}
 
 		//cancel the siege checkup task
-		GriefPrevention.instance.getServer().getScheduler().cancelTask(siegeData.checkupTaskID);
+		GriefPrevention.instance.getServer().getScheduler().cancelTask(siegeData.getCheckupTaskID());
 		
 		//notify everyone who won and lost
 		if(winnerName != null && loserName != null)
@@ -1210,7 +1215,7 @@ public abstract class DataStore
 	}
 
 	//extend a siege, if it's possible to do so
-	synchronized void tryExtendSiege(Player player, Claim claim)
+	public synchronized void tryExtendSiege(Player player, Claim claim)
 	{
 		PlayerData playerData = this.getPlayerData(player.getUniqueId());
 		
@@ -1218,7 +1223,7 @@ public abstract class DataStore
 		if(playerData.siegeData == null) return;
 		
 		//claim isn't already under the same siege
-		if(playerData.siegeData.claims.contains(claim)) return;
+		if(playerData.siegeData.getClaims().contains(claim)) return;
 		
 		//admin claims can't be sieged
 		if(claim.isAdminClaim()) return;
@@ -1227,7 +1232,7 @@ public abstract class DataStore
 		if(claim.allowAccess(player) != null) return;
 		
 		//otherwise extend the siege
-		playerData.siegeData.claims.add(claim);
+		playerData.siegeData.getClaims().add(claim);
 		claim.siegeData = playerData.siegeData;
 	}		
 	

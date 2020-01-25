@@ -1,6 +1,6 @@
 package me.ryanhamshire.griefprevention.config;
 
-import me.ryanhamshire.griefprevention.ClaimsMode;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;

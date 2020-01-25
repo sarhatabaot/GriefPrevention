@@ -21,6 +21,8 @@ package me.ryanhamshire.griefprevention;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -49,7 +51,7 @@ class EntityCleanupTask implements Runnable
 		ArrayList<World> worlds = new ArrayList<>();
 		for(World world : GriefPrevention.instance.getServer().getWorlds())
 	    {
-		    if(Config.config_claims_worldModes.get(world) == ClaimsMode.Creative)
+		    if(Config.config_claims_worldModes.get(world) == ClaimsMode.CREATIVE)
 		    {
 		        worlds.add(world);
 		    }

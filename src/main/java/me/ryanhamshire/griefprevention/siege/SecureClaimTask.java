@@ -15,44 +15,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package me.ryanhamshire.griefprevention;
 
-import java.util.Collection;
+package me.ryanhamshire.griefprevention.siege;
 
+import me.ryanhamshire.griefprevention.GriefPrevention;
+import me.ryanhamshire.griefprevention.Messages;
+import me.ryanhamshire.griefprevention.TextMode;
+import me.ryanhamshire.griefprevention.claim.Claim;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 //secures a claim after a siege looting window has closed
-class SecureClaimTask implements Runnable 
-{
+public class SecureClaimTask implements Runnable {
 	private SiegeData siegeData;
-	
-	public SecureClaimTask(SiegeData siegeData)
-	{
+
+	public SecureClaimTask(SiegeData siegeData) {
 		this.siegeData = siegeData;
 	}
-	
+
 	@Override
-	public void run()
-	{
+	public void run() {
 		//for each claim involved in this siege
-		for(int i = 0; i < this.siegeData.claims.size(); i++)
-		{
+		for (int i = 0; i < this.siegeData.getClaims().size(); i++) {
 			//lock the doors
-			Claim claim = this.siegeData.claims.get(i);
+			Claim claim = this.siegeData.getClaims().get(i);
 			claim.doorsOpen = false;
-			
+
 			//eject bad guys
-			@SuppressWarnings("unchecked")
-            Collection<Player> onlinePlayers = (Collection<Player>)GriefPrevention.instance.getServer().getOnlinePlayers();
-			for(Player player : onlinePlayers)
-			{
-				if(claim.contains(player.getLocation(), false, false) && claim.allowAccess(player) != null)
-				{
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (claim.contains(player.getLocation(), false, false) && claim.allowAccess(player) != null) {
 					GriefPrevention.sendMessage(player, TextMode.Err, Messages.SiegeDoorsLockedEjection);
 					GriefPrevention.instance.ejectPlayer(player);
 				}
 			}
 		}
-	}	
+	}
 }

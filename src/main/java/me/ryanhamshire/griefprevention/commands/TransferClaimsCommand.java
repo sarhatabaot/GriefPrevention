@@ -4,6 +4,7 @@ package me.ryanhamshire.griefprevention.commands;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.griefprevention.*;
+import me.ryanhamshire.griefprevention.claim.Claim;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 

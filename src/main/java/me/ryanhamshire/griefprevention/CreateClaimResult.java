@@ -18,7 +18,9 @@
 
 package me.ryanhamshire.griefprevention;
 
-public class CreateClaimResult 
+import me.ryanhamshire.griefprevention.claim.Claim;
+
+public class CreateClaimResult
 {
 	//whether or not the creation succeeded (it would fail if the new claim overlapped another existing claim)
 	public boolean succeeded;

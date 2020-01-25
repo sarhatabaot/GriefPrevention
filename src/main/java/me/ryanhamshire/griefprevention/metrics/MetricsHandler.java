@@ -1,6 +1,6 @@
 package me.ryanhamshire.griefprevention.metrics;
 
-import me.ryanhamshire.griefprevention.ClaimsMode;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.GriefPrevention;
 import me.ryanhamshire.griefprevention.config.Config;
 import org.bukkit.World;
@@ -59,7 +59,7 @@ public class MetricsHandler
         boolean claimsEnabled = false;
         for (ClaimsMode mode : Config.config_claims_worldModes.values())
         {
-            if (mode != ClaimsMode.Disabled)
+            if (mode != ClaimsMode.DISABLED)
             {
                 claimsEnabled = true;
                 break;

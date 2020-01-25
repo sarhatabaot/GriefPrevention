@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
 import org.bukkit.*;
 
 //manages data stored in the file system

@@ -18,6 +18,8 @@
 
 package me.ryanhamshire.griefprevention;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.PreventPvPEvent;
 import me.ryanhamshire.griefprevention.events.ProtectDeathDropsEvent;
@@ -148,7 +150,7 @@ public class EntityEventHandler implements Listener
 		{
 		    event.setCancelled(true);
 		}
-		else if(Config.config_claims_worldModes.get(event.getBlock().getWorld()) != ClaimsMode.Disabled)
+		else if(Config.config_claims_worldModes.get(event.getBlock().getWorld()) != ClaimsMode.DISABLED)
         {
             if (event.getEntityType() == EntityType.WITHER)
             {
@@ -219,7 +221,7 @@ public class EntityEventHandler implements Listener
                     if(originalLocation.getBlockX() != newLocation.getBlockX() || originalLocation.getBlockZ() != newLocation.getBlockZ())
                     {
                         //in creative mode worlds, never form the block
-                        if(Config.config_claims_worldModes.get(newLocation.getWorld()) == ClaimsMode.Creative)
+                        if(Config.config_claims_worldModes.get(newLocation.getWorld()) == ClaimsMode.CREATIVE)
                         {
                             event.setCancelled(true);
                             return;

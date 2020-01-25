@@ -18,6 +18,7 @@
  
 package me.ryanhamshire.griefprevention;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import me.ryanhamshire.griefprevention.visualization.VisualizationType;

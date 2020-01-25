@@ -8,8 +8,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import me.ryanhamshire.griefprevention.Claim;
-import me.ryanhamshire.griefprevention.ClaimPermission;
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimPermission;
 
 /**
  * This event is thrown when the trust is changed in one or more claims

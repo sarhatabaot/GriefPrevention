@@ -1,6 +1,6 @@
 package me.ryanhamshire.griefprevention.events;
 
-import me.ryanhamshire.griefprevention.Claim;
+import me.ryanhamshire.griefprevention.claim.Claim;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;

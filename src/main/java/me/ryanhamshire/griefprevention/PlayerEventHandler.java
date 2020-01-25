@@ -17,6 +17,8 @@
  */
 
 package me.ryanhamshire.griefprevention;
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.VisualizationEvent;
 import me.ryanhamshire.griefprevention.spam.SpamAnalysisResult;
@@ -690,7 +692,7 @@ public class PlayerEventHandler implements Listener
 		    instance.checkPvpProtectionNeeded(player);
 		    
 		    //if in survival claims mode, send a message about the claim basics video (except for admins - assumed experts)
-		    if(Config.config_claims_worldModes.get(player.getWorld()) == ClaimsMode.Survival && !player.hasPermission("griefprevention.adminclaims") && this.dataStore.claims.size() > 10)
+		    if(Config.config_claims_worldModes.get(player.getWorld()) == ClaimsMode.SURVIVAL && !player.hasPermission("griefprevention.adminclaims") && this.dataStore.claims.size() > 10)
 		    {
 		        WelcomeTask task = new WelcomeTask(player);
 		        Bukkit.getScheduler().scheduleSyncDelayedTask(instance, task, Config.config_claims_manualDeliveryDelaySeconds * 20L);
