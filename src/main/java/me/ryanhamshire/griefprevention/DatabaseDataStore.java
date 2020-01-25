@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.Date;
 
 import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.*;
 
 //manages data stored in the file system
@@ -481,7 +482,7 @@ public class DatabaseDataStore extends DataStore
 	}
 
 	@Override
-	PlayerData getPlayerDataFromStorage(UUID playerID)
+	public PlayerData getPlayerDataFromStorage(UUID playerID)
 	{
 		PlayerData playerData = new PlayerData();
 		playerData.playerID = playerID;

@@ -25,6 +25,7 @@ import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.ClaimCreatedEvent;
 import me.ryanhamshire.griefprevention.events.ClaimDeletedEvent;
 import me.ryanhamshire.griefprevention.events.ClaimModifiedEvent;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.siege.SecureClaimTask;
 import me.ryanhamshire.griefprevention.siege.SiegeCheckupTask;
 import me.ryanhamshire.griefprevention.siege.SiegeData;
@@ -89,9 +90,13 @@ public abstract class DataStore
 	
 	//next claim ID
 	Long nextClaimID = (long)0;
-	
+
+	public static String getDataLayerFolderPath() {
+		return dataLayerFolderPath;
+	}
+
 	//path information, for where stuff stored on disk is well...  stored
-	protected final static String dataLayerFolderPath = "plugins" + File.separator + "GriefPreventionData";
+	protected static final String dataLayerFolderPath = "plugins" + File.separator + "GriefPreventionData";
 	final static String playerDataFolderPath = dataLayerFolderPath + File.separator + "PlayerData";
     final static String configFilePath = dataLayerFolderPath + File.separator + "config.yml";
 	final static String messagesFilePath = dataLayerFolderPath + File.separator + "messages.yml";
@@ -606,7 +611,7 @@ public abstract class DataStore
 		return playerData;
 	}
 	
-	abstract PlayerData getPlayerDataFromStorage(UUID playerID);
+	public abstract PlayerData getPlayerDataFromStorage(UUID playerID);
 	
 	//deletes a claim or subdivision
     synchronized public void deleteClaim(Claim claim)

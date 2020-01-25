@@ -16,15 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.cleanup;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import me.ryanhamshire.griefprevention.GriefPrevention;
 import me.ryanhamshire.griefprevention.claim.Claim;
-import org.bukkit.Bukkit;
+import me.ryanhamshire.griefprevention.cleanup.CleanupUnusedClaimPreTask;
 import org.bukkit.plugin.java.JavaPlugin;
 
 //FEATURE: automatically remove claims owned by inactive players which:

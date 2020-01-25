@@ -16,12 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.cleanup;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
+import me.ryanhamshire.griefprevention.GriefPrevention;
+import me.ryanhamshire.griefprevention.PlayerData;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
 import org.bukkit.Bukkit;

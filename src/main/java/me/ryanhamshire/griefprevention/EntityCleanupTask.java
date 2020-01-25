@@ -24,6 +24,7 @@ import java.util.List;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;

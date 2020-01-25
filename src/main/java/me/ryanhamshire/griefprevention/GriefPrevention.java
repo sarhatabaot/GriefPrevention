@@ -33,11 +33,14 @@ import co.aikar.commands.BukkitCommandManager;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimPermission;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
+import me.ryanhamshire.griefprevention.cleanup.FindUnusedClaimsTask;
 import me.ryanhamshire.griefprevention.commands.*;
 import me.ryanhamshire.griefprevention.commands.claims.*;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.PreventBlockBreakEvent;
 import me.ryanhamshire.griefprevention.events.TrustChangedEvent;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
+import me.ryanhamshire.griefprevention.logging.CustomLogger;
 import me.ryanhamshire.griefprevention.metrics.MetricsHandler;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import net.milkbowl.vault.economy.Economy;
@@ -289,7 +292,7 @@ public class GriefPrevention extends JavaPlugin {
 		this.getServer().getScheduler().scheduleSyncDelayedTask(GriefPrevention.instance, task, 20L * 60 * 2);
 
 		//start recurring cleanup scan for unused claims belonging to inactive players
-		FindUnusedClaimsTask task2 = new FindUnusedClaimsTask();
+		FindUnusedClaimsTask task2 = new FindUnusedClaimsTask(this);
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, task2, 20L * 60, 20L * Config.config_advanced_claim_expiration_check_rate);
 
 		registerEvents();
@@ -871,7 +874,7 @@ public class GriefPrevention extends JavaPlugin {
 		//it's too expensive to do this for huge claims
 		if (claim.getArea() > 10000) return;
 
-		ArrayList<Chunk> chunks = claim.getChunks();
+		ArrayList<Chunk> chunks = new ArrayList<>(claim.getChunks());
 		for (Chunk chunk : chunks) {
 			this.restoreChunk(chunk, this.getSeaLevel(chunk.getWorld()) - 15, false, delayInTicks, null);
 		}

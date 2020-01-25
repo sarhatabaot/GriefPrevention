@@ -21,6 +21,7 @@ import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.VisualizationEvent;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.spam.SpamAnalysisResult;
 import me.ryanhamshire.griefprevention.spam.SpamDetector;
 import me.ryanhamshire.griefprevention.visualization.Visualization;

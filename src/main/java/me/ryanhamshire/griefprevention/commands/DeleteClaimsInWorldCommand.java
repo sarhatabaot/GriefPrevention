@@ -2,7 +2,7 @@ package me.ryanhamshire.griefprevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import me.ryanhamshire.griefprevention.CustomLogEntryTypes;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.GriefPrevention;
 import me.ryanhamshire.griefprevention.Messages;
 import me.ryanhamshire.griefprevention.TextMode;

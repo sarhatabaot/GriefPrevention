@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.griefprevention.*;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import org.bukkit.entity.Player;
 

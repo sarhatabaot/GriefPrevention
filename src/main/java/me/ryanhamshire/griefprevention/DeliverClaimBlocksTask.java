@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.events.AccrueClaimBlocksEvent;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.entity.Player;
 
 //FEATURE: give players claim blocks for playing, as long as they're not away from their computer

@@ -20,6 +20,7 @@ package me.ryanhamshire.griefprevention;
 
 import com.google.common.io.Files;
 import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -606,7 +607,7 @@ public class FlatFileDataStore extends DataStore
 	}
 	
 	@Override
-	synchronized PlayerData getPlayerDataFromStorage(UUID playerID)
+	public synchronized PlayerData getPlayerDataFromStorage(UUID playerID)
 	{
 		File playerFile = new File(playerDataFolderPath + File.separator + playerID.toString());
 					
@@ -631,19 +632,6 @@ public class FlatFileDataStore extends DataStore
     			    
 
     				iterator.next();
-                    //first line is last login timestamp //RoboMWM - not using this anymore
-//
-//    				//convert that to a date and store it
-//    				DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
-//    				try
-//    				{
-//    					playerData.setLastLogin(dateFormat.parse(lastLoginTimestampString));
-//    				}
-//    				catch(ParseException parseException)
-//    				{
-//    					GriefPrevention.AddLogEntry("Unable to load last login for \"" + playerFile.getName() + "\".");
-//    					playerData.setLastLogin(null);
-//    				}
     				
     				//second line is accrued claim blocks
     				String accruedBlocksString = iterator.next();

@@ -2,6 +2,7 @@ package me.ryanhamshire.griefprevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
 import me.ryanhamshire.griefprevention.*;
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

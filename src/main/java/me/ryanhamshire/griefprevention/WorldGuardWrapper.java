@@ -1,5 +1,6 @@
 package me.ryanhamshire.griefprevention;
 
+import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
