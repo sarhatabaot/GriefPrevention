@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
+import me.ryanhamshire.GriefPrevention.spam.SpamAnalysisResult;
+import me.ryanhamshire.GriefPrevention.spam.SpamDetector;
 import org.junit.Test;
 
 public class Tests
@@ -91,29 +93,29 @@ public class Tests
    {
        SpamDetector detector = new SpamDetector();
        String message = "Hi, everybody! :)";
-       SpamAnalysisResult result = detector.AnalyzeMessage(player1, message, 1000);
-       assertTrue(result.muteReason == null);
-       assertFalse(result.shouldWarnChatter);
-       assertFalse(result.shouldBanChatter);
-       assertTrue(result.finalMessage.equals(message));
+       SpamAnalysisResult result = detector.analyzeMessage(player1, message, 1000);
+       assertTrue(result.getMuteReason() == null);
+       assertFalse(result.isShouldWarnChatter());
+       assertFalse(result.isShouldBanChatter());
+       assertTrue(result.getFinalMessage().equals(message));
    }  
    
    @Test
    public void SpamDetector_CoordinatesOK()
    {
        SpamDetector detector = new SpamDetector();
-       assertTrue(detector.AnalyzeMessage(player1, "1029,2945", 0).muteReason == null);
-       assertTrue(detector.AnalyzeMessage(player1, "x1029 z2945", 100000).muteReason == null);
-       assertTrue(detector.AnalyzeMessage(player1, "x=1029; y=60; z=2945", 200000).muteReason == null);
+       assertTrue(detector.analyzeMessage(player1, "1029,2945", 0).getMuteReason() == null);
+       assertTrue(detector.analyzeMessage(player1, "x1029 z2945", 100000).getMuteReason() == null);
+       assertTrue(detector.analyzeMessage(player1, "x=1029; y=60; z=2945", 200000).getMuteReason() == null);
    }
    
    @Test
    public void SpamDetector_NumbersOK()
    {
        SpamDetector detector = new SpamDetector();
-       assertTrue(detector.AnalyzeMessage(player1, "25", 0).muteReason == null);
-       assertTrue(detector.AnalyzeMessage(player1, "12,234.89", 100000).muteReason == null);
-       assertTrue(detector.AnalyzeMessage(player1, "20078", 200000).muteReason == null);
+       assertTrue(detector.analyzeMessage(player1, "25", 0).getMuteReason() == null);
+       assertTrue(detector.analyzeMessage(player1, "12,234.89", 100000).getMuteReason() == null);
+       assertTrue(detector.analyzeMessage(player1, "20078", 200000).getMuteReason() == null);
    }
    
    @Test
@@ -121,8 +123,8 @@ public class Tests
    {
        SpamDetector detector = new SpamDetector();
        String message = "Hi, everybody!   :)";
-       assertFalse(detector.AnalyzeMessage(player1, message, 1000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, message, 28000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, message, 1000).getMuteReason() != null);
+       assertTrue(detector.analyzeMessage(player1, message, 28000).getMuteReason() != null);
    }
    
    @Test
@@ -130,82 +132,82 @@ public class Tests
    {
        SpamDetector detector = new SpamDetector();
        String message = "Hi, everybody!   :)";
-       assertFalse(detector.AnalyzeMessage(player1, message, 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, message, 35000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, message, 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, message, 35000).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_Padding()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Hacking is really fun guys!! :) 123123123456.12398127498762935", 1000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Hacking is really fun guys!! :) 112321523456.1239345498762935", 1000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hacking is really fun guys!! :) 123123123456.12398127498762935", 1000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "Hacking is really fun guys!! :) 112321523456.1239345498762935", 1000).getMuteReason() != null);
    }
    
    @Test
    public void SpamDetector_Repetition()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody!   :)", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody!    :)", 5000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Hi, everybody!   :)", 9000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody!   :)", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody!    :)", 5000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "Hi, everybody!   :)", 9000).getMuteReason() != null);
    }
    
    @Test
    public void SpamDetector_TeamRepetition()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 1000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player2, "Hi, everybody! :)", 2500).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody! :)", 1000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player2, "Hi, everybody! :)", 2500).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_TeamRepetitionOK()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "hi", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player2, "hi", 3000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "hi", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player2, "hi", 3000).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_Gibberish()
    {
        SpamDetector detector = new SpamDetector();
-       assertTrue(detector.AnalyzeMessage(player1, "poiufpoiuasdfpoiuasdfuaufpoiasfopiuasdfpoiuasdufsdf", 1000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player2, "&^%(& (&^%(%    (*%#@^ #$&(_||", 3000).muteReason != null);
+       assertTrue(detector.analyzeMessage(player1, "poiufpoiuasdfpoiuasdfuaufpoiasfopiuasdfpoiuasdufsdf", 1000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player2, "&^%(& (&^%(%    (*%#@^ #$&(_||", 3000).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_RepetitionOK()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody!   :)", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody!    :)", 12000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody!   :)", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody!    :)", 12000).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_TooFast()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "How's it going? :)", 2000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 3000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 4000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody! :)", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "How's it going? :)", 2000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 3000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "Why is nobody responding to me??!", 4000).getMuteReason()  != null);
    }
    
    @Test
    public void SpamDetector_TooMuchVolume()
    {
        SpamDetector detector = new SpamDetector();
-       assertFalse(detector.AnalyzeMessage(player1, "Once upon a time there was this guy who wanted to be a hacker.  So he started logging into Minecraft servers and threatening to DDOS them.", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Everybody knew that he couldn't be a real hacker, because no real hacker would consider hacking Minecraft to be worth their time, but he didn't understand that even after it was explained to him.", 3000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Once upon a time there was this guy who wanted to be a hacker.  So he started logging into Minecraft servers and threatening to DDOS them.", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Everybody knew that he couldn't be a real hacker, because no real hacker would consider hacking Minecraft to be worth their time, but he didn't understand that even after it was explained to him.", 3000).getMuteReason() != null);
        
        //start of mute
-       assertTrue(detector.AnalyzeMessage(player1, "After I put him in jail and he wasted half an hour of his time trying to solve the (unsolvable) jail 'puzzle', he offered his services to me in exchange for being let out of jail.", 10000).muteReason != null);
+       assertTrue(detector.analyzeMessage(player1, "After I put him in jail and he wasted half an hour of his time trying to solve the (unsolvable) jail 'puzzle', he offered his services to me in exchange for being let out of jail.", 10000).getMuteReason()  != null);
        
        //forgiven after taking a break
-       assertFalse(detector.AnalyzeMessage(player1, "He promised to DDOS any of my 'rival servers'.  So I offered him an opportunity to prove he could do what he said, and I gave him his own IP address from our server logs.  Then he disappeared for a while.", 16000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "When he finally came back, I /SoftMuted him and left him in the jail.", 28000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "He promised to DDOS any of my 'rival servers'.  So I offered him an opportunity to prove he could do what he said, and I gave him his own IP address from our server logs.  Then he disappeared for a while.", 16000).getMuteReason() != null);
+       assertFalse(detector.analyzeMessage(player1, "When he finally came back, I /SoftMuted him and left him in the jail.", 28000).getMuteReason() != null);
    }
    
    @Test
@@ -213,9 +215,9 @@ public class Tests
    {
        SpamDetector detector = new SpamDetector();
        String message = "OMG I LUFF U KRISTINAAAAAA!";
-       SpamAnalysisResult result = detector.AnalyzeMessage(player1, message, 1000);
-       assertTrue(result.finalMessage.equals(message.toLowerCase()));
-       assertTrue(result.muteReason == null);
+       SpamAnalysisResult result = detector.analyzeMessage(player1, message, 1000);
+       assertTrue(result.getFinalMessage().equals(message.toLowerCase()));
+       assertTrue(result.getMuteReason()  == null);
    }
    
    @Test
@@ -223,9 +225,9 @@ public class Tests
    {
        SpamDetector detector = new SpamDetector();
        String message = "=D";
-       SpamAnalysisResult result = detector.AnalyzeMessage(player1, message, 1000);
-       assertTrue(result.finalMessage.equals(message));
-       assertTrue(result.muteReason == null);
+       SpamAnalysisResult result = detector.analyzeMessage(player1, message, 1000);
+       assertTrue(result.getFinalMessage().equals(message));
+       assertTrue(result.getMuteReason()  == null);
    }
    
    @Test
@@ -234,23 +236,23 @@ public class Tests
        SpamDetector detector = new SpamDetector();
        
        //allowable noise
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "How's it going? :)", 2000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 3000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody! :)", 1000).getMuteReason() != null);
+       assertFalse(detector.analyzeMessage(player1, "How's it going? :)", 2000).getMuteReason() != null);
+       assertFalse(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 3000).getMuteReason()  != null);
        
        //begin mute and warning
-       SpamAnalysisResult result = detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 4000);
-       assertTrue(result.muteReason != null);
-       assertTrue(result.shouldWarnChatter);
-       assertFalse(result.shouldBanChatter);
-       assertTrue(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 5000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 6000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 7000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "How's it going? :)", 8000).muteReason != null);
+       SpamAnalysisResult result = detector.analyzeMessage(player1, "Why is nobody responding to me??!", 4000);
+       assertTrue(result.getMuteReason()  != null);
+       assertTrue(result.isShouldWarnChatter());
+       assertFalse(result.isShouldBanChatter());
+       assertTrue(detector.analyzeMessage(player1, "Hi, everybody! :)", 5000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 6000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "Hi, everybody! :)", 7000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "How's it going? :)", 8000).getMuteReason()  != null);
        
        //ban
-       result = detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 9000);
-       assertTrue(result.shouldBanChatter);
+       result = detector.analyzeMessage(player1, "Why is nobody responding to me??!", 9000);
+       assertTrue(result.isShouldBanChatter());
    }
    
    @Test
@@ -259,31 +261,31 @@ public class Tests
        SpamDetector detector = new SpamDetector();
        
        //allowable noise
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 1000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "How's it going? :)", 2000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 3000).muteReason != null);
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody! :)", 1000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "How's it going? :)", 2000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 3000).getMuteReason()  != null);
        
        //start of mutes, and a warning
-       SpamAnalysisResult result = detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 4000);
-       assertTrue(result.muteReason != null);
-       assertTrue(result.shouldWarnChatter);
-       assertFalse(result.shouldBanChatter);
-       assertTrue(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 5000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 6000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 7000).muteReason != null);
-       assertTrue(detector.AnalyzeMessage(player1, "How's it going? :)", 8000).muteReason != null);
+       SpamAnalysisResult result = detector.analyzeMessage(player1, "Why is nobody responding to me??!", 4000);
+       assertTrue(result.getMuteReason()  != null);
+       assertTrue(result.isShouldWarnChatter());
+       assertFalse(result.isShouldBanChatter());
+       assertTrue(detector.analyzeMessage(player1, "Hi, everybody! :)", 5000).getMuteReason() != null);
+       assertTrue(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 6000).getMuteReason() != null);
+       assertTrue(detector.analyzeMessage(player1, "Hi, everybody! :)", 7000).getMuteReason()  != null);
+       assertTrue(detector.analyzeMessage(player1, "How's it going? :)", 8000).getMuteReason()  != null);
        
        //long delay before next message, not muted anymore
-       result = detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 20000);
-       assertFalse(result.shouldBanChatter);
-       assertFalse(detector.AnalyzeMessage(player1, "Hi, everybody! :)", 21000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "How's it going? :)", 22000).muteReason != null);
-       assertFalse(detector.AnalyzeMessage(player1, "Oh how I've missed you all! :)", 23000).muteReason != null);
+       result = detector.analyzeMessage(player1, "Why is nobody responding to me??!", 20000);
+       assertFalse(result.isShouldBanChatter());
+       assertFalse(detector.analyzeMessage(player1, "Hi, everybody! :)", 21000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "How's it going? :)", 22000).getMuteReason()  != null);
+       assertFalse(detector.analyzeMessage(player1, "Oh how I've missed you all! :)", 23000).getMuteReason()  != null);
        
        //mutes start again, and warning appears again
-       result = detector.AnalyzeMessage(player1, "Why is nobody responding to me??!", 24000);
-       assertTrue(result.muteReason != null);
-       assertTrue(result.shouldWarnChatter);
-       assertFalse(result.shouldBanChatter);
+       result = detector.analyzeMessage(player1, "Why is nobody responding to me??!", 24000);
+       assertTrue(result.getMuteReason()  != null);
+       assertTrue(result.isShouldWarnChatter());
+       assertFalse(result.isShouldBanChatter());
    }
 }

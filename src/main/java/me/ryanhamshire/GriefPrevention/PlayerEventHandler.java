@@ -19,6 +19,8 @@
 package me.ryanhamshire.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.VisualizationEvent;
+import me.ryanhamshire.GriefPrevention.spam.SpamAnalysisResult;
+import me.ryanhamshire.GriefPrevention.spam.SpamDetector;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -306,12 +308,12 @@ public class PlayerEventHandler implements Listener
 		if(player.hasPermission("griefprevention.spam")) return false;
 		
 		//examine recent messages to detect spam
-		SpamAnalysisResult result = this.spamDetector.AnalyzeMessage(player.getUniqueId(), message, System.currentTimeMillis());
+		SpamAnalysisResult result = this.spamDetector.analyzeMessage(player.getUniqueId(), message, System.currentTimeMillis());
 		
 		//apply any needed changes to message (like lowercasing all-caps)
 		if(event instanceof AsyncPlayerChatEvent)
         {
-            ((AsyncPlayerChatEvent)event).setMessage(result.finalMessage);
+            ((AsyncPlayerChatEvent)event).setMessage(result.getFinalMessage());
         }
 		
 		//don't allow new players to chat after logging in until they move
@@ -323,7 +325,7 @@ public class PlayerEventHandler implements Listener
                currentLocation.getBlockZ() == playerData.noChatLocation.getBlockZ())
             {
                 instance.sendMessage(player, TextMode.Err, Messages.NoChatUntilMove, 10L);
-                result.muteReason = "pre-movement chat";
+                result.setMuteReason("pre-movement chat");
             }
             else
             {
@@ -332,17 +334,16 @@ public class PlayerEventHandler implements Listener
         }
         
         //filter IP addresses
-        if(result.muteReason == null)
+        if(result.getMuteReason() == null)
         {
-            if(instance.containsBlockedIP(message))
-            {
+            if(instance.containsBlockedIP(message)) {
                 //block message
-                result.muteReason = "IP address";
+                result.setMuteReason("IP address");
             }
         }
         
         //take action based on spam detector results
-        if(result.shouldBanChatter)
+        if(result.isShouldBanChatter())
         {
             if(Config.config_spam_banOffenders)
             {
@@ -364,18 +365,18 @@ public class PlayerEventHandler implements Listener
             }
         }
         
-        else if(result.shouldWarnChatter)
+        else if(result.isShouldWarnChatter())
         {
             //warn and log
             instance.sendMessage(player, TextMode.Warn, Config.config_spam_warningMessage, 10L);
             instance.AddLogEntry("Warned " + player.getName() + " about spam penalties.", CustomLogEntryTypes.Debug, true);
         }
         
-        if(result.muteReason != null)
+        if(result.getMuteReason() != null)
         {
             //mute and log
-            instance.AddLogEntry("Muted " + result.muteReason + ".");
-            instance.AddLogEntry("Muted " + player.getName() + " " + result.muteReason + ":" + message, CustomLogEntryTypes.Debug, true);
+            instance.AddLogEntry("Muted " + result.getMuteReason()+ ".");
+            instance.AddLogEntry("Muted " + player.getName() + " " + result.getMuteReason() + ":" + message, CustomLogEntryTypes.Debug, true);
 
             return true;
         }
