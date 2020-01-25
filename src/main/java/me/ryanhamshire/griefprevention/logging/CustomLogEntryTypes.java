@@ -18,12 +18,11 @@
 
 package me.ryanhamshire.griefprevention.logging;
 
-public enum CustomLogEntryTypes
-{
-    SocialActivity,
-    SuspiciousActivity,
-    AdminActivity,
-    Debug,
-    Exception,
-    MutedChat
+public enum CustomLogEntryTypes {
+    SOCIAL_ACTIVITY,
+    SUSPICIOUS_ACTIVITY,
+    ADMIN_ACTIVITY,
+    DEBUG,
+    EXCEPTION,
+    MUTED_CHAT
 }

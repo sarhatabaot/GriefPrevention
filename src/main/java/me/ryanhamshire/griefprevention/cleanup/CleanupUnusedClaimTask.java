@@ -78,7 +78,7 @@ public class CleanupUnusedClaimTask extends BukkitRunnable {
 					GriefPrevention.instance.restoreClaim(getClaim(), 0);
 				}
 
-				GriefPrevention.addLogEntry(" " + getClaim().getOwnerName() + "'s new player claim expired.", CustomLogEntryTypes.AdminActivity);
+				GriefPrevention.addLogEntry(" " + getClaim().getOwnerName() + "'s new player claim expired.", CustomLogEntryTypes.ADMIN_ACTIVITY);
 			}
 		}
 
@@ -95,7 +95,7 @@ public class CleanupUnusedClaimTask extends BukkitRunnable {
 
 				//delete them
 				GriefPrevention.instance.dataStore.deleteClaimsForPlayer(getClaim().ownerID, true);
-				GriefPrevention.addLogEntry(" All of " + getClaim().getOwnerName() + "'s claims have expired.", CustomLogEntryTypes.AdminActivity);
+				GriefPrevention.addLogEntry(" All of " + getClaim().getOwnerName() + "'s claims have expired.", CustomLogEntryTypes.ADMIN_ACTIVITY);
 
 				for (Claim value : claims) {
 					//if configured to do so, restore the land to natural
@@ -122,7 +122,7 @@ public class CleanupUnusedClaimTask extends BukkitRunnable {
 					if (expireEventCanceled())
 						return;
 					GriefPrevention.instance.dataStore.deleteClaim(getClaim(), true, true);
-					GriefPrevention.addLogEntry("Removed " + getClaim().getOwnerName() + "'s unused claim @ " + GriefPrevention.getFriendlyLocationString(getClaim().getLesserBoundaryCorner()), CustomLogEntryTypes.AdminActivity);
+					GriefPrevention.addLogEntry("Removed " + getClaim().getOwnerName() + "'s unused claim @ " + GriefPrevention.getFriendlyLocationString(getClaim().getLesserBoundaryCorner()), CustomLogEntryTypes.ADMIN_ACTIVITY);
 
 					//restore the claim area to natural state
 					GriefPrevention.instance.restoreClaim(getClaim(), 0);

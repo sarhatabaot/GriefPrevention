@@ -155,7 +155,7 @@ public abstract class DataStore
 			{
 				GriefPrevention.instance.getLogger().severe("nextClaimID was lesser or equal to an already-existing claim ID!\n" +
 						"This usually happens if you ran out of storage space.");
-				GriefPrevention.addLogEntry("Changing nextClaimID from " + nextClaimID + " to " + claim.id, CustomLogEntryTypes.Debug, false);
+				GriefPrevention.addLogEntry("Changing nextClaimID from " + nextClaimID + " to " + claim.id, CustomLogEntryTypes.DEBUG, false);
 				nextClaimID = claim.id + 1;
 			}
 		}

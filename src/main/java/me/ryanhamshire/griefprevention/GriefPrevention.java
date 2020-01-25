@@ -100,7 +100,7 @@ public class GriefPrevention extends JavaPlugin {
 	//adds a server log entry
 	public static synchronized void addLogEntry(String entry, CustomLogEntryTypes customLogType, boolean excludeFromServerLogs) {
 		if (customLogType != null && GriefPrevention.instance.customLogger != null) {
-			GriefPrevention.instance.customLogger.AddEntry(entry, customLogType);
+			GriefPrevention.instance.customLogger.addEntry(entry, customLogType);
 		}
 		if (!excludeFromServerLogs) log.info(entry);
 	}
@@ -110,7 +110,7 @@ public class GriefPrevention extends JavaPlugin {
 	}
 
 	public static synchronized void addLogEntry(String entry) {
-		addLogEntry(entry, CustomLogEntryTypes.Debug);
+		addLogEntry(entry, CustomLogEntryTypes.DEBUG);
 	}
 
 	private String dataMode;

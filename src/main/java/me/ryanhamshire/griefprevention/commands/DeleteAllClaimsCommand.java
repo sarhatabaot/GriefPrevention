@@ -25,7 +25,7 @@ public class DeleteAllClaimsCommand extends GPBaseCommand {
 
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.DeleteAllSuccess, otherPlayer.getName());
 		if (player != null) {
-			GriefPrevention.addLogEntry(player.getName() + " deleted all claims belonging to " + otherPlayer.getName() + ".", CustomLogEntryTypes.AdminActivity);
+			GriefPrevention.addLogEntry(player.getName() + " deleted all claims belonging to " + otherPlayer.getName() + ".", CustomLogEntryTypes.ADMIN_ACTIVITY);
 			//revert any current visualization
 			Visualization.revert(player);
 		}

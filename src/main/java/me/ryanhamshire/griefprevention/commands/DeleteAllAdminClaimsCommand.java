@@ -22,7 +22,7 @@ public class DeleteAllAdminClaimsCommand extends GPBaseCommand{
 
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.AllAdminDeleted);
 		if(player != null) {
-			GriefPrevention.addLogEntry(player.getName() + " deleted all administrative claims.", CustomLogEntryTypes.AdminActivity);
+			GriefPrevention.addLogEntry(player.getName() + " deleted all administrative claims.", CustomLogEntryTypes.ADMIN_ACTIVITY);
 			//revert any current visualization
 			Visualization.revert(player);
 		}

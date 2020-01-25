@@ -19,7 +19,7 @@
 package me.ryanhamshire.griefprevention.logging;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,7 +48,7 @@ public class CustomLogger {
 		logFolder.mkdirs();
 
 		//delete any outdated log files immediately
-		this.DeleteExpiredLogs();
+		this.deleteExpiredLogs();
 
 		//unless disabled, schedule recurring tasks
 		int daysToKeepLogs = Config.config_logs_daysToKeep;
@@ -63,7 +63,7 @@ public class CustomLogger {
 
 	private static final Pattern inlineFormatterPattern = Pattern.compile("§.");
 
-	void AddEntry(String entry, CustomLogEntryTypes entryType) {
+	public void addEntry(String entry, CustomLogEntryTypes entryType) {
 		//if disabled, do nothing
 		int daysToKeepLogs = Config.config_logs_daysToKeep;
 		if (daysToKeepLogs == 0) return;
@@ -79,17 +79,17 @@ public class CustomLogger {
 	}
 
 	private boolean isEnabledType(CustomLogEntryTypes entryType) {
-		if (entryType == CustomLogEntryTypes.Exception) return true;
-		if (entryType == CustomLogEntryTypes.SocialActivity && !Config.config_logs_socialEnabled) return false;
-		if (entryType == CustomLogEntryTypes.SuspiciousActivity && !Config.config_logs_suspiciousEnabled) return false;
-		if (entryType == CustomLogEntryTypes.AdminActivity && !Config.config_logs_adminEnabled) return false;
-		if (entryType == CustomLogEntryTypes.Debug && !Config.config_logs_debugEnabled) return false;
-		if (entryType == CustomLogEntryTypes.MutedChat && !Config.config_logs_mutedChatEnabled) return false;
+		if (entryType == CustomLogEntryTypes.EXCEPTION) return true;
+		if (entryType == CustomLogEntryTypes.SOCIAL_ACTIVITY && !Config.config_logs_socialEnabled) return false;
+		if (entryType == CustomLogEntryTypes.SUSPICIOUS_ACTIVITY && !Config.config_logs_suspiciousEnabled) return false;
+		if (entryType == CustomLogEntryTypes.ADMIN_ACTIVITY && !Config.config_logs_adminEnabled) return false;
+		if (entryType == CustomLogEntryTypes.DEBUG && !Config.config_logs_debugEnabled) return false;
+		if (entryType == CustomLogEntryTypes.MUTED_CHAT && !Config.config_logs_mutedChatEnabled) return false;
 
 		return true;
 	}
 
-	void WriteEntries() {
+	void writeEntries() {
 		try {
 			//if nothing to write, stop here
 			if (this.queuedEntries.length() == 0) return;
@@ -100,7 +100,7 @@ public class CustomLogger {
 			File logFile = new File(filepath);
 
 			//dump content
-			Files.append(this.queuedEntries.toString(), logFile, Charset.forName("UTF-8"));
+			Files.append(this.queuedEntries.toString(), logFile, StandardCharsets.UTF_8);
 
 			//in case of a failure to write the above due to exception,
 			//the unwritten entries will remain the buffer for the next write to retry
@@ -110,7 +110,7 @@ public class CustomLogger {
 		}
 	}
 
-	private void DeleteExpiredLogs() {
+	private void deleteExpiredLogs() {
 		try {
 			//get list of log files
 			File logFolder = new File(this.logFolderPath);
@@ -120,8 +120,7 @@ public class CustomLogger {
 			int daysToKeepLogs = Config.config_logs_daysToKeep;
 			Calendar expirationBoundary = Calendar.getInstance();
 			expirationBoundary.add(Calendar.DATE, -daysToKeepLogs);
-			for (int i = 0; i < files.length; i++) {
-				File file = files[i];
+			for (File file : files) {
 				if (file.isDirectory()) continue;  //skip any folders
 
 				String filename = file.getName().replace(".log", "");
@@ -132,7 +131,6 @@ public class CustomLogger {
 					int year = Integer.parseInt(dateParts[0]);
 					int month = Integer.parseInt(dateParts[1]) - 1;
 					int day = Integer.parseInt(dateParts[2]);
-
 					Calendar filedate = Calendar.getInstance();
 					filedate.set(year, month, day);
 					if (filedate.before(expirationBoundary)) {
@@ -140,7 +138,7 @@ public class CustomLogger {
 					}
 				} catch (NumberFormatException e) {
 					//throw this away - effectively ignoring any files without the correct filename format
-					GriefPrevention.addLogEntry("Ignoring an unexpected file in the abridged logs folder: " + file.getName(), CustomLogEntryTypes.Debug, true);
+					GriefPrevention.addLogEntry("Ignoring an unexpected file in the abridged logs folder: " + file.getName(), CustomLogEntryTypes.DEBUG, true);
 				}
 			}
 		} catch (Exception e) {
@@ -152,14 +150,14 @@ public class CustomLogger {
 	private class EntryWriter implements Runnable {
 		@Override
 		public void run() {
-			WriteEntries();
+			writeEntries();
 		}
 	}
 
 	private class ExpiredLogRemover implements Runnable {
 		@Override
 		public void run() {
-			DeleteExpiredLogs();
+			deleteExpiredLogs();
 		}
 	}
 }

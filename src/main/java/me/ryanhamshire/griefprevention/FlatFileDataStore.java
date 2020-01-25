@@ -112,7 +112,7 @@ public class FlatFileDataStore extends DataStore
 			{
 			    StringWriter errors = new StringWriter();
 	            e.printStackTrace(new PrintWriter(errors));
-	            GriefPrevention.addLogEntry(errors.toString(), CustomLogEntryTypes.Exception);
+	            GriefPrevention.addLogEntry(errors.toString(), CustomLogEntryTypes.EXCEPTION);
 			}
 			
 			try
@@ -380,8 +380,8 @@ public class FlatFileDataStore extends DataStore
                     {
                         StringWriter errors = new StringWriter();
                         e.printStackTrace(new PrintWriter(errors));
-                        GriefPrevention.addLogEntry("Failed to load claim " + files[i].getName() + ". This usually occurs when your server runs out of storage space, causing any file saves to corrupt. Fix or delete the file found in GriefPreventionData/ClaimData/" + files[i].getName(), CustomLogEntryTypes.Debug, false);
-                        GriefPrevention.addLogEntry(files[i].getName() + " " + errors.toString(), CustomLogEntryTypes.Exception);
+                        GriefPrevention.addLogEntry("Failed to load claim " + files[i].getName() + ". This usually occurs when your server runs out of storage space, causing any file saves to corrupt. Fix or delete the file found in GriefPreventionData/ClaimData/" + files[i].getName(), CustomLogEntryTypes.DEBUG, false);
+                        GriefPrevention.addLogEntry(files[i].getName() + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
                     }
                 }
                 
@@ -455,7 +455,7 @@ public class FlatFileDataStore extends DataStore
                     {
                         StringWriter errors = new StringWriter();
                         e.printStackTrace(new PrintWriter(errors));
-                        GriefPrevention.addLogEntry(files[i].getName() + " " + errors.toString(), CustomLogEntryTypes.Exception);
+                        GriefPrevention.addLogEntry(files[i].getName() + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
                     }
                 }
             }
@@ -588,7 +588,7 @@ public class FlatFileDataStore extends DataStore
 		{
 		    StringWriter errors = new StringWriter();
             e.printStackTrace(new PrintWriter(errors));
-            GriefPrevention.addLogEntry(claimID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+            GriefPrevention.addLogEntry(claimID + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
 		}
 	}
 	
@@ -671,8 +671,8 @@ public class FlatFileDataStore extends DataStore
 			{
 			    StringWriter errors = new StringWriter();
 	            latestException.printStackTrace(new PrintWriter(errors));
-	            GriefPrevention.addLogEntry("Failed to load PlayerData for " + playerID + ". This usually occurs when your server runs out of storage space, causing any file saves to corrupt. Fix or delete the file in GriefPrevetionData/PlayerData/" + playerID, CustomLogEntryTypes.Debug, false);
-	            GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+	            GriefPrevention.addLogEntry("Failed to load PlayerData for " + playerID + ". This usually occurs when your server runs out of storage space, causing any file saves to corrupt. Fix or delete the file in GriefPrevetionData/PlayerData/" + playerID, CustomLogEntryTypes.DEBUG, false);
+	            GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
 			}
 		}
 			

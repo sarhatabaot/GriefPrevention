@@ -41,7 +41,7 @@ public class DeleteClaimCommand extends GPBaseCommand {
 				}
 
 				GriefPrevention.sendMessage(player, TextMode.Success, Messages.DeleteSuccess);
-				GriefPrevention.addLogEntry(player.getName() + " deleted " + claim.getOwnerName() + "'s claim at " + GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()), CustomLogEntryTypes.AdminActivity);
+				GriefPrevention.addLogEntry(player.getName() + " deleted " + claim.getOwnerName() + "'s claim at " + GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()), CustomLogEntryTypes.ADMIN_ACTIVITY);
 
 				//revert any current visualization
 				Visualization.revert(player);

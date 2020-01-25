@@ -60,7 +60,7 @@ class WorldGuardWrapper
                     "using an outdated version or WorldEdit broke their API... again." +
                     "Consider updating/downgrading/removing WorldGuard or disable WorldGuard integration in GP's config " +
                     "(CreationRequiresWorldGuardBuildPermission). If you're going to report this please be kind because " +
-                    "WorldEdit's API hasn't been :c", CustomLogEntryTypes.Debug, false);
+                    "WorldEdit's API hasn't been :c", CustomLogEntryTypes.DEBUG, false);
             return true;
         }
 

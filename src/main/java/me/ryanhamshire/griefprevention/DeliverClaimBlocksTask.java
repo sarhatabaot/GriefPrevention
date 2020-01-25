@@ -95,7 +95,7 @@ class DeliverClaimBlocksTask implements Runnable
             {
                 if (Config.config_claims_accruedIdlePercent <= 0)
                 {
-                    GriefPrevention.addLogEntry(player.getName() + " wasn't active enough to accrue claim blocks this round.", CustomLogEntryTypes.Debug, true);
+                    GriefPrevention.addLogEntry(player.getName() + " wasn't active enough to accrue claim blocks this round.", CustomLogEntryTypes.DEBUG, true);
                     return; //idle accrual percentage is disabled
                 }
 
@@ -107,7 +107,7 @@ class DeliverClaimBlocksTask implements Runnable
             instance.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled())
             {
-                GriefPrevention.addLogEntry(player.getName() + " claim block delivery was canceled by another plugin.", CustomLogEntryTypes.Debug, true);
+                GriefPrevention.addLogEntry(player.getName() + " claim block delivery was canceled by another plugin.", CustomLogEntryTypes.DEBUG, true);
                 return; //event was cancelled
             }
 
@@ -115,7 +115,7 @@ class DeliverClaimBlocksTask implements Runnable
             accrualRate = event.getBlocksToAccrue();
             if (accrualRate < 0) accrualRate = 0;
             playerData.accrueBlocks(accrualRate);
-            GriefPrevention.addLogEntry("Delivering " + event.getBlocksToAccrue() + " blocks to " + player.getName(), CustomLogEntryTypes.Debug, true);
+            GriefPrevention.addLogEntry("Delivering " + event.getBlocksToAccrue() + " blocks to " + player.getName(), CustomLogEntryTypes.DEBUG, true);
 
             //intentionally NOT saving data here to reduce overall secondary storage access frequency
             //many other operations will cause this player's data to save, including his eventual logout

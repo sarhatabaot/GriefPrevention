@@ -103,7 +103,7 @@ class EntityCleanupTask implements Runnable
 				}
 
 				if (remove) {
-					GriefPrevention.addLogEntry("Removing entity " + entity.getType().name() + " @ " + entity.getLocation(), CustomLogEntryTypes.Debug);
+					GriefPrevention.addLogEntry("Removing entity " + entity.getType().name() + " @ " + entity.getLocation(), CustomLogEntryTypes.DEBUG);
 					entity.remove();
 				}
 			}

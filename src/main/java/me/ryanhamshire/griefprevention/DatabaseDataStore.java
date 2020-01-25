@@ -503,7 +503,7 @@ public class DatabaseDataStore extends DataStore
 		{
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
 		}
 
 		return playerData;
@@ -540,7 +540,7 @@ public class DatabaseDataStore extends DataStore
 		{
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.EXCEPTION);
 		}
 	}
 
