@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 
 import me.ryanhamshire.GriefPrevention.config.Config;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -37,10 +39,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Hopper;
-import org.bukkit.block.Lectern;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.minecart.HopperMinecart;
@@ -351,8 +350,8 @@ public class BlockEventHandler implements Listener
     					GriefPrevention.sendMessage(player, TextMode.Success, Messages.AutomaticClaimNotification);
     					
     					//show the player the protected area
-    					Visualization visualization = Visualization.FromClaim(result.claim, block.getY(), VisualizationType.Claim, player.getLocation());
-    					Visualization.Apply(player, visualization);
+    					Visualization visualization = Visualization.fromClaim(result.claim, block.getY(), VisualizationType.CLAIM, player.getLocation());
+    					Visualization.apply(player, visualization);
 					}
 				}
 				
@@ -404,8 +403,8 @@ public class BlockEventHandler implements Listener
     				
     				if(playerData.lastClaim != null)
     				{
-    				    Visualization visualization = Visualization.FromClaim(playerData.lastClaim, block.getY(), VisualizationType.Claim, player.getLocation());
-    				    Visualization.Apply(player, visualization);
+    				    Visualization visualization = Visualization.fromClaim(playerData.lastClaim, block.getY(), VisualizationType.CLAIM, player.getLocation());
+    				    Visualization.apply(player, visualization);
     				}
 			    }
 			}

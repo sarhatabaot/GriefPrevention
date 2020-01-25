@@ -19,22 +19,15 @@
 package me.ryanhamshire.GriefPrevention;
 import java.net.InetAddress;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import me.ryanhamshire.GriefPrevention.ShovelMode;
-import me.ryanhamshire.GriefPrevention.SiegeData;
-import me.ryanhamshire.GriefPrevention.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 
 import me.ryanhamshire.GriefPrevention.config.Config;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 //holds all of GriefPrevention's player-tied data
 public class PlayerData 

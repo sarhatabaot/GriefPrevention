@@ -36,6 +36,7 @@ import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.PreventBlockBreakEvent;
 import me.ryanhamshire.GriefPrevention.events.TrustChangedEvent;
 import me.ryanhamshire.GriefPrevention.metrics.MetricsHandler;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.BanList;
@@ -381,7 +382,7 @@ public class GriefPrevention extends JavaPlugin {
 			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AbandonSuccess, String.valueOf(remainingBlocks));
 
 			//revert any current visualization
-			Visualization.Revert(player);
+			Visualization.revert(player);
 
 			playerData.warnedAboutMajorDeletion = false;
 		}

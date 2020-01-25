@@ -5,6 +5,8 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.GriefPrevention.*;
 import me.ryanhamshire.GriefPrevention.config.Config;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -97,8 +99,8 @@ public class ClaimCommand extends GPBaseCommand {
 			if (result.claim != null) {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.CreateClaimFailOverlapShort);
 
-				Visualization visualization = Visualization.FromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.ErrorClaim, player.getLocation());
-				Visualization.Apply(player, visualization);
+				Visualization visualization = Visualization.fromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.ERROR_CLAIM, player.getLocation());
+				Visualization.apply(player, visualization);
 			} else {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.CreateClaimFailOverlapRegion);
 			}
@@ -111,8 +113,8 @@ public class ClaimCommand extends GPBaseCommand {
 			} else if (GriefPrevention.instance.claimsEnabledForWorld(player.getLocation().getWorld())) {
 				GriefPrevention.sendMessage(player, TextMode.Instr, Messages.SurvivalBasicsVideo2, DataStore.SURVIVAL_VIDEO_URL);
 			}
-			Visualization visualization = Visualization.FromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.Claim, player.getLocation());
-			Visualization.Apply(player, visualization);
+			Visualization visualization = Visualization.fromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.CLAIM, player.getLocation());
+			Visualization.apply(player, visualization);
 			playerData.claimResizing = null;
 			playerData.lastShovelLocation = null;
 

@@ -23,6 +23,8 @@ import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.ClaimCreatedEvent;
 import me.ryanhamshire.GriefPrevention.events.ClaimDeletedEvent;
 import me.ryanhamshire.GriefPrevention.events.ClaimModifiedEvent;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -1378,8 +1380,8 @@ public abstract class DataStore
             
             //inform about success, visualize, communicate remaining blocks available
             GriefPrevention.sendMessage(player, TextMode.Success, Messages.ClaimResizeSuccess, String.valueOf(claimBlocksRemaining));
-            Visualization visualization = Visualization.FromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.Claim, player.getLocation());
-            Visualization.Apply(player, visualization);
+            Visualization visualization = Visualization.fromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.CLAIM, player.getLocation());
+            Visualization.apply(player, visualization);
             
             //if resizing someone else's claim, make a log entry
             if(!player.getUniqueId().equals(playerData.claimResizing.ownerID) && playerData.claimResizing.parent == null)
@@ -1414,8 +1416,8 @@ public abstract class DataStore
                 GriefPrevention.sendMessage(player, TextMode.Err, Messages.ResizeFailOverlap);
                 
                 //show the player the conflicting claim
-                Visualization visualization = Visualization.FromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.ErrorClaim, player.getLocation());
-                Visualization.Apply(player, visualization);
+                Visualization visualization = Visualization.fromClaim(result.claim, player.getEyeLocation().getBlockY(), VisualizationType.ERROR_CLAIM, player.getLocation());
+                Visualization.apply(player, visualization);
             }
             else
             {

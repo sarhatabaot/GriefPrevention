@@ -19,6 +19,8 @@
 package me.ryanhamshire.GriefPrevention;
 
 import me.ryanhamshire.GriefPrevention.config.Config;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 
@@ -73,7 +75,7 @@ class EquipShovelProcessingTask implements Runnable
 		if(claim != null && claim.allowEdit(player) == null)
 		{
 		    playerData.lastClaim = claim;
-		    Visualization.Apply(player, Visualization.FromClaim(claim, player.getEyeLocation().getBlockY(), VisualizationType.Claim, player.getLocation()));
+		    Visualization.apply(player, Visualization.fromClaim(claim, player.getEyeLocation().getBlockY(), VisualizationType.CLAIM, player.getLocation()));
 		}
 	}
 }

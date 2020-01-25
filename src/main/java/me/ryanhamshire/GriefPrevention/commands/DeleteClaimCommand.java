@@ -4,6 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
 import me.ryanhamshire.GriefPrevention.config.Config;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 import org.bukkit.entity.Player;
 
 @CommandAlias("deleteclaim")
@@ -41,7 +42,7 @@ public class DeleteClaimCommand extends GPBaseCommand {
 				GriefPrevention.AddLogEntry(player.getName() + " deleted " + claim.getOwnerName() + "'s claim at " + GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()), CustomLogEntryTypes.AdminActivity);
 
 				//revert any current visualization
-				Visualization.Revert(player);
+				Visualization.revert(player);
 
 				playerData.warnedAboutMajorDeletion = false;
 			}

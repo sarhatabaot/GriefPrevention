@@ -2,6 +2,7 @@ package me.ryanhamshire.GriefPrevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -25,7 +26,7 @@ public class DeleteAllClaimsCommand extends GPBaseCommand {
 		if (player != null) {
 			GriefPrevention.AddLogEntry(player.getName() + " deleted all claims belonging to " + otherPlayer.getName() + ".", CustomLogEntryTypes.AdminActivity);
 			//revert any current visualization
-			Visualization.Revert(player);
+			Visualization.revert(player);
 		}
 
 	}

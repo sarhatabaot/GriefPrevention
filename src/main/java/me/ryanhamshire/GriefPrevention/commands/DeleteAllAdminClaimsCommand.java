@@ -4,6 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 import org.bukkit.entity.Player;
 
 @CommandAlias("deletealladminclaims")
@@ -22,7 +23,7 @@ public class DeleteAllAdminClaimsCommand extends GPBaseCommand{
 		if(player != null) {
 			GriefPrevention.AddLogEntry(player.getName() + " deleted all administrative claims.", CustomLogEntryTypes.AdminActivity);
 			//revert any current visualization
-			Visualization.Revert(player);
+			Visualization.revert(player);
 		}
 
 	}

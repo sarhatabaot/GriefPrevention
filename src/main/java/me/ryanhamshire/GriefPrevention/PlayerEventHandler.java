@@ -21,6 +21,8 @@ import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.VisualizationEvent;
 import me.ryanhamshire.GriefPrevention.spam.SpamAnalysisResult;
 import me.ryanhamshire.GriefPrevention.spam.SpamDetector;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -2002,8 +2004,8 @@ public class PlayerEventHandler implements Listener
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, claims));
 
 			        //visualize boundaries
-                    Visualization visualization = Visualization.fromClaims(claims, player.getEyeLocation().getBlockY(), VisualizationType.Claim, player.getLocation());
-                    Visualization.Apply(player, visualization);
+                    Visualization visualization = Visualization.fromClaims(claims, player.getEyeLocation().getBlockY(), VisualizationType.CLAIM, player.getLocation());
+                    Visualization.apply(player, visualization);
 
                     instance.sendMessage(player, TextMode.Info, Messages.ShowNearbyClaims, String.valueOf(claims.size()));
 
@@ -2032,7 +2034,7 @@ public class PlayerEventHandler implements Listener
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, Collections.<Claim>emptySet()));
 
-					Visualization.Revert(player);
+					Visualization.revert(player);
 					return;
 				}
 
@@ -2047,7 +2049,7 @@ public class PlayerEventHandler implements Listener
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, Collections.<Claim>emptySet()));
 
-					Visualization.Revert(player);
+					Visualization.revert(player);
 				}
 
 				//claim case
@@ -2057,12 +2059,12 @@ public class PlayerEventHandler implements Listener
 					instance.sendMessage(player, TextMode.Info, Messages.BlockClaimed, claim.getOwnerName());
 
 					//visualize boundary
-					Visualization visualization = Visualization.FromClaim(claim, player.getEyeLocation().getBlockY(), VisualizationType.Claim, player.getLocation());
+					Visualization visualization = Visualization.fromClaim(claim, player.getEyeLocation().getBlockY(), VisualizationType.CLAIM, player.getLocation());
 
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, claim));
 
-					Visualization.Apply(player, visualization);
+					Visualization.apply(player, visualization);
 
 					if (player.hasPermission("griefprevention.seeclaimsize")) {
 						instance.sendMessage(player, TextMode.Info, "  " + claim.getWidth() + "x" + claim.getHeight() + "=" + claim.getArea());
@@ -2135,12 +2137,12 @@ public class PlayerEventHandler implements Listener
 				if(claim != null)
 				{
 					instance.sendMessage(player, TextMode.Err, Messages.BlockClaimed, claim.getOwnerName());
-					Visualization visualization = Visualization.FromClaim(claim, clickedBlock.getY(), VisualizationType.ErrorClaim, player.getLocation());
+					Visualization visualization = Visualization.fromClaim(claim, clickedBlock.getY(), VisualizationType.ERROR_CLAIM, player.getLocation());
 
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, claim));
 
-					Visualization.Apply(player, visualization);
+					Visualization.apply(player, visualization);
 
 					return;
 				}
@@ -2416,12 +2418,12 @@ public class PlayerEventHandler implements Listener
 							{
 								instance.sendMessage(player, TextMode.Err, Messages.CreateSubdivisionOverlap);
 
-								Visualization visualization = Visualization.FromClaim(result.claim, clickedBlock.getY(), VisualizationType.ErrorClaim, player.getLocation());
+								Visualization visualization = Visualization.fromClaim(result.claim, clickedBlock.getY(), VisualizationType.ERROR_CLAIM, player.getLocation());
 
                                 // alert plugins of a visualization
                                 Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, result.claim));
 
-								Visualization.Apply(player, visualization);
+								Visualization.apply(player, visualization);
 
 								return;
 							}
@@ -2430,12 +2432,12 @@ public class PlayerEventHandler implements Listener
 							else
 							{
 								instance.sendMessage(player, TextMode.Success, Messages.SubdivisionSuccess);
-								Visualization visualization = Visualization.FromClaim(result.claim, clickedBlock.getY(), VisualizationType.Claim, player.getLocation());
+								Visualization visualization = Visualization.fromClaim(result.claim, clickedBlock.getY(), VisualizationType.CLAIM, player.getLocation());
 
                                 // alert plugins of a visualization
                                 Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, result.claim));
 
-								Visualization.Apply(player, visualization);
+								Visualization.apply(player, visualization);
 								playerData.lastShovelLocation = null;
 								playerData.claimSubdividing = null;
 							}
@@ -2447,12 +2449,12 @@ public class PlayerEventHandler implements Listener
 					else
 					{
 						instance.sendMessage(player, TextMode.Err, Messages.CreateClaimFailOverlap);
-						Visualization visualization = Visualization.FromClaim(claim, clickedBlock.getY(), VisualizationType.Claim, player.getLocation());
+						Visualization visualization = Visualization.fromClaim(claim, clickedBlock.getY(), VisualizationType.CLAIM, player.getLocation());
 
                         // alert plugins of a visualization
                         Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, claim));
 
-						Visualization.Apply(player, visualization);
+						Visualization.apply(player, visualization);
 					}
 				}
 
@@ -2460,12 +2462,12 @@ public class PlayerEventHandler implements Listener
 				else
 				{
 					instance.sendMessage(player, TextMode.Err, Messages.CreateClaimFailOverlapOtherPlayer, claim.getOwnerName());
-					Visualization visualization = Visualization.FromClaim(claim, clickedBlock.getY(), VisualizationType.ErrorClaim, player.getLocation());
+					Visualization visualization = Visualization.fromClaim(claim, clickedBlock.getY(), VisualizationType.ERROR_CLAIM, player.getLocation());
 
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, claim));
 
-					Visualization.Apply(player, visualization);
+					Visualization.apply(player, visualization);
 				}
 
 				return;
@@ -2499,12 +2501,12 @@ public class PlayerEventHandler implements Listener
 
 				//show him where he's working
                 Claim newClaim = new Claim(clickedBlock.getLocation(), clickedBlock.getLocation(), null, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), null);
-				Visualization visualization = Visualization.FromClaim(newClaim, clickedBlock.getY(), VisualizationType.RestoreNature, player.getLocation());
+				Visualization visualization = Visualization.fromClaim(newClaim, clickedBlock.getY(), VisualizationType.RESTORE_NATURE, player.getLocation());
 
                 // alert plugins of a visualization
                 Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, newClaim));
 
-				Visualization.Apply(player, visualization);
+				Visualization.apply(player, visualization);
 			}
 
 			//otherwise, he's trying to finish creating a claim by setting the other boundary corner
@@ -2587,12 +2589,12 @@ public class PlayerEventHandler implements Listener
 					{
     				    instance.sendMessage(player, TextMode.Err, Messages.CreateClaimFailOverlapShort);
 
-    					Visualization visualization = Visualization.FromClaim(result.claim, clickedBlock.getY(), VisualizationType.ErrorClaim, player.getLocation());
+    					Visualization visualization = Visualization.fromClaim(result.claim, clickedBlock.getY(), VisualizationType.ERROR_CLAIM, player.getLocation());
 
                         // alert plugins of a visualization
                         Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, result.claim));
 
-    					Visualization.Apply(player, visualization);
+    					Visualization.apply(player, visualization);
 					}
 					else
 					{
@@ -2606,12 +2608,12 @@ public class PlayerEventHandler implements Listener
 				else
 				{
 					instance.sendMessage(player, TextMode.Success, Messages.CreateClaimSuccess);
-					Visualization visualization = Visualization.FromClaim(result.claim, clickedBlock.getY(), VisualizationType.Claim, player.getLocation());
+					Visualization visualization = Visualization.fromClaim(result.claim, clickedBlock.getY(), VisualizationType.CLAIM, player.getLocation());
 
                     // alert plugins of a visualization
                     Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, result.claim));
 
-					Visualization.Apply(player, visualization);
+					Visualization.apply(player, visualization);
 					playerData.lastShovelLocation = null;
 
 					//if it's a big claim, tell the player about subdivisions

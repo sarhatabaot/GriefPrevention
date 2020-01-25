@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
 import me.ryanhamshire.GriefPrevention.commands.GPBaseCommand;
 import me.ryanhamshire.GriefPrevention.config.Config;
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
 import org.bukkit.entity.Player;
 
 @CommandAlias("abandonallclaims")
@@ -45,6 +46,6 @@ public class AbandonAllClaimsCommand extends GPBaseCommand {
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.SuccessfulAbandon, String.valueOf(remainingBlocks));
 
 		//revert any current visualization
-		Visualization.Revert(player);
+		Visualization.revert(player);
 	}
 }

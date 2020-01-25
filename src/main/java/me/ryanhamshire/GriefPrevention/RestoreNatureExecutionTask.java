@@ -20,6 +20,8 @@ package me.ryanhamshire.GriefPrevention;
 
 import java.util.ArrayList;
 
+import me.ryanhamshire.GriefPrevention.visualization.Visualization;
+import me.ryanhamshire.GriefPrevention.visualization.VisualizationType;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -123,8 +125,8 @@ class RestoreNatureExecutionTask implements Runnable
 		if(player != null)
 		{
 			Claim claim = new Claim(lesserCorner, greaterCorner, null, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), null);
-			Visualization visualization = Visualization.FromClaim(claim, player.getLocation().getBlockY(), VisualizationType.RestoreNature, player.getLocation());
-			Visualization.Apply(player, visualization);
+			Visualization visualization = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.RESTORE_NATURE, player.getLocation());
+			Visualization.apply(player, visualization);
 		}
 	}	
 }

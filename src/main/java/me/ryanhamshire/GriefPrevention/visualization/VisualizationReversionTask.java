@@ -15,9 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package me.ryanhamshire.GriefPrevention;
 
+package me.ryanhamshire.GriefPrevention.visualization;
+
+import me.ryanhamshire.GriefPrevention.PlayerData;
 import me.ryanhamshire.GriefPrevention.events.VisualizationEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,28 +26,25 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 
 //applies a visualization for a player by sending him block change packets
-class VisualizationReversionTask implements Runnable 
-{
+class VisualizationReversionTask implements Runnable {
 	private Visualization visualization;
 	private Player player;
 	private PlayerData playerData;
 
-	public VisualizationReversionTask(Player player, PlayerData playerData, Visualization visualization)
-	{
+	public VisualizationReversionTask(Player player, PlayerData playerData, Visualization visualization) {
 		this.visualization = visualization;
 		this.playerData = playerData;
 		this.player = player;
 	}
-	
+
 	@Override
-	public void run()
-	{
+	public void run() {
 		//don't do anything if the player's current visualization is different from the one scheduled to revert
-	    if(playerData.currentVisualization != visualization) return;
+		if (playerData.currentVisualization != visualization) return;
 
 		// alert plugins of a visualization
-		Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, Collections.<Claim>emptySet()));
-	    
-	    Visualization.Revert(player);
+		Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, Collections.emptySet()));
+
+		Visualization.revert(player);
 	}
 }
