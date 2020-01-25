@@ -1,6 +1,7 @@
 package me.ryanhamshire.GriefPrevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.GriefPrevention.*;
 import org.bukkit.OfflinePlayer;
@@ -14,19 +15,19 @@ public class ClaimListCommand extends GPBaseCommand {
 		super(plugin);
 	}
 
-	public void onClaimList(final Player player, @Optional String name){
+	@Default
+	public void onClaimList(final Player player, @Optional String name) {
 		//player whose claims will be listed
 		OfflinePlayer otherPlayer = null;
 
 		//if another player isn't specified, assume current player
-		if(getOrigArgs().length < 1) {
-			if(player != null)
+		if (getOrigArgs().length < 1) {
+			if (player != null)
 				otherPlayer = player;
 		}
 
 		//otherwise if no permission to delve into another player's claims data
-		else if(player != null && !player.hasPermission("griefprevention.claimslistother"))
-		{
+		else if (player != null && !player.hasPermission("griefprevention.claimslistother")) {
 			GriefPrevention.sendMessage(player, TextMode.Err, Messages.ClaimsListNoPermission);
 			return;
 		}
@@ -34,7 +35,7 @@ public class ClaimListCommand extends GPBaseCommand {
 		//otherwise try to find the specified player
 		else {
 			otherPlayer = plugin.resolvePlayerByName(name);
-			if(otherPlayer == null) {
+			if (otherPlayer == null) {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.PlayerNotFound2);
 				return;
 			}
@@ -47,11 +48,9 @@ public class ClaimListCommand extends GPBaseCommand {
 				String.valueOf(playerData.getAccruedClaimBlocks()),
 				String.valueOf((playerData.getBonusClaimBlocks() + plugin.dataStore.getGroupBonusBlocks(otherPlayer.getUniqueId()))),
 				String.valueOf((playerData.getAccruedClaimBlocks() + playerData.getBonusClaimBlocks() + plugin.dataStore.getGroupBonusBlocks(otherPlayer.getUniqueId()))));
-		if(claims.size() > 0)
-		{
+		if (!claims.isEmpty()) {
 			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.ClaimsListHeader);
-			for(int i = 0; i < playerData.getClaims().size(); i++)
-			{
+			for (int i = 0; i < playerData.getClaims().size(); i++) {
 				Claim claim = playerData.getClaims().get(i);
 				GriefPrevention.sendMessage(player, TextMode.Instr, GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()) + plugin.dataStore.getMessage(Messages.ContinueBlockMath, String.valueOf(claim.getArea())));
 			}
@@ -60,7 +59,7 @@ public class ClaimListCommand extends GPBaseCommand {
 		}
 
 		//drop the data we just loaded, if the player isn't online
-		if(!otherPlayer.isOnline())
+		if (!otherPlayer.isOnline())
 			plugin.dataStore.clearCachedPlayerData(otherPlayer.getUniqueId());
 
 	}
