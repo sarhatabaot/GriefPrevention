@@ -122,7 +122,7 @@ public class PlayerData
 	String messageOnRespawn = null;
 
     //player which a pet will be given to when it's right-clicked
-	OfflinePlayer petGiveawayRecipient = null;
+	public OfflinePlayer petGiveawayRecipient = null;
 	
 	//timestamp for last "you're building outside your land claims" message
 	Long buildWarningTimestamp = null;
@@ -255,7 +255,7 @@ public class PlayerData
     {
         if(this.claims == null)
         {
-            this.claims = new Vector<Claim>();
+            this.claims = new Vector<>();
             
             //find all the claims belonging to this player and note them for future reference
             DataStore dataStore = GriefPrevention.instance.dataStore;
