@@ -92,20 +92,22 @@ public class GriefPrevention extends JavaPlugin {
 	public static final int NOTIFICATION_SECONDS = 20;
 
 	//adds a server log entry
-	public static synchronized void AddLogEntry(String entry, CustomLogEntryTypes customLogType, boolean excludeFromServerLogs) {
+	public static synchronized void addLogEntry(String entry, CustomLogEntryTypes customLogType, boolean excludeFromServerLogs) {
 		if (customLogType != null && GriefPrevention.instance.customLogger != null) {
 			GriefPrevention.instance.customLogger.AddEntry(entry, customLogType);
 		}
 		if (!excludeFromServerLogs) log.info(entry);
 	}
 
-	public static synchronized void AddLogEntry(String entry, CustomLogEntryTypes customLogType) {
-		AddLogEntry(entry, customLogType, false);
+	public static synchronized void addLogEntry(String entry, CustomLogEntryTypes customLogType) {
+		addLogEntry(entry, customLogType, false);
 	}
 
-	public static synchronized void AddLogEntry(String entry) {
-		AddLogEntry(entry, CustomLogEntryTypes.Debug);
+	public static synchronized void addLogEntry(String entry) {
+		addLogEntry(entry, CustomLogEntryTypes.Debug);
 	}
+
+	private String dataMode;
 
 	private void registerCommands() {
 		BukkitCommandManager commandManager = new BukkitCommandManager(this);
@@ -153,38 +155,73 @@ public class GriefPrevention extends JavaPlugin {
 		commandManager.registerCommand(new UnTrustCommand(this));
 	}
 
-	@Override
-	public void onEnable() {
-		instance = this;
-		log = instance.getLogger();
+	private void economyHook(){
+		if (Config.config_economy_claimBlocksPurchaseCost > 0 || Config.config_economy_claimBlocksSellValue > 0) {
+			//try to load Vault
+			GriefPrevention.addLogEntry("GriefPrevention requires Vault for economy integration.");
+			GriefPrevention.addLogEntry("Attempting to load Vault...");
+			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+			GriefPrevention.addLogEntry("Vault loaded successfully!");
 
-		if(!new File(getDataFolder()+"/config.yml").exists())
-			copyOldConfig();
-		else saveDefaultConfig();
+			//ask Vault to hook into an economy plugin
+			GriefPrevention.addLogEntry("Looking for a Vault-compatible economy plugin...");
+			if (economyProvider != null) {
+				GriefPrevention.economy = economyProvider.getProvider();
 
-		Config.init(this);
+				//on success, display success message
+				if (GriefPrevention.economy != null) {
+					GriefPrevention.addLogEntry("Hooked into economy: " + GriefPrevention.economy.getName() + ".");
+					GriefPrevention.addLogEntry("Ready to buy/sell claim blocks!");
+				}
 
-		this.customLogger = new CustomLogger();
+				//otherwise error message
+				else {
+					GriefPrevention.addLogEntry("ERROR: Vault was unable to find a supported economy plugin.  Either install a Vault-compatible economy plugin, or set both of the economy config variables to zero.");
+				}
+			}
 
-		AddLogEntry("Finished loading configuration.");
+			//another error case
+			else {
+				GriefPrevention.addLogEntry("ERROR: Vault was unable to find a supported economy plugin.  Either install a Vault-compatible economy plugin, or set both of the economy config variables to zero.");
+			}
+		}
+	}
 
-		registerCommands();
+
+	private void registerEvents(){
+		//register for events
+		PluginManager pluginManager = this.getServer().getPluginManager();
+
+		//player events
+		PlayerEventHandler playerEventHandler = new PlayerEventHandler(this.dataStore, this);
+		pluginManager.registerEvents(playerEventHandler, this);
+
+		//block events
+		BlockEventHandler blockEventHandler = new BlockEventHandler(this.dataStore);
+		pluginManager.registerEvents(blockEventHandler, this);
+
+		//entity events
+		EntityEventHandler entityEventHandler = new EntityEventHandler(this.dataStore, this);
+		pluginManager.registerEvents(entityEventHandler, this);
+	}
+
+	private void initDataStore(){
 		//when datastore initializes, it loads player and claim data, and posts some stats to the log
 		if (Config.databaseUrl.length() > 0) {
 			try {
 				DatabaseDataStore databaseStore = new DatabaseDataStore(Config.databaseUrl, Config.databaseUserName, Config.databasePassword);
 
 				if (FlatFileDataStore.hasData()) {
-					GriefPrevention.AddLogEntry("There appears to be some data on the hard drive.  Migrating those data to the database...");
+					GriefPrevention.addLogEntry("There appears to be some data on the hard drive.  Migrating those data to the database...");
 					FlatFileDataStore flatFileStore = new FlatFileDataStore();
 					this.dataStore = flatFileStore;
 					flatFileStore.migrateData(databaseStore);
-					GriefPrevention.AddLogEntry("Data migration process complete.");
+					GriefPrevention.addLogEntry("Data migration process complete.");
 				}
 
 				this.dataStore = databaseStore;
 			} catch (Exception e) {
-				GriefPrevention.AddLogEntry("Because there was a problem with the database, GriefPrevention will not function properly.  Either update the database config settings resolve the issue, or delete those lines from your config.yml so that GriefPrevention can use the file system to store data.");
+				GriefPrevention.addLogEntry("Because there was a problem with the database, GriefPrevention will not function properly.  Either update the database config settings resolve the issue, or delete those lines from your config.yml so that GriefPrevention can use the file system to store data.");
 				e.printStackTrace();
 				this.getServer().getPluginManager().disablePlugin(this);
 				return;
@@ -207,14 +244,35 @@ public class GriefPrevention extends JavaPlugin {
 			try {
 				this.dataStore = new FlatFileDataStore();
 			} catch (Exception e) {
-				GriefPrevention.AddLogEntry("Unable to initialize the file system data store.  Details:");
-				GriefPrevention.AddLogEntry(e.getMessage());
+				GriefPrevention.addLogEntry("Unable to initialize the file system data store.  Details:");
+				GriefPrevention.addLogEntry(e.getMessage());
 				e.printStackTrace();
 			}
 		}
 
-		String dataMode = (this.dataStore instanceof FlatFileDataStore) ? "(File Mode)" : "(Database Mode)";
-		AddLogEntry("Finished loading data " + dataMode + ".");
+		this.dataMode = (this.dataStore instanceof FlatFileDataStore) ? "(File Mode)" : "(Database Mode)";
+		addLogEntry("Finished loading data " + dataMode + ".");
+	}
+
+
+
+	@Override
+	public void onEnable() {
+		instance = this;
+		log = instance.getLogger();
+
+		if (!new File(getDataFolder() + "/config.yml").exists())
+			copyOldConfig();
+		else saveDefaultConfig();
+
+		Config.init(this);
+
+		this.customLogger = new CustomLogger();
+
+		addLogEntry("Finished loading configuration.");
+
+		registerCommands();
+		initDataStore();
 
 		//unless claim block accrual is disabled, start the recurring per 10 minute event to give claim blocks to online players
 		//20L ~ 1 second
@@ -231,51 +289,10 @@ public class GriefPrevention extends JavaPlugin {
 		FindUnusedClaimsTask task2 = new FindUnusedClaimsTask();
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, task2, 20L * 60, 20L * Config.config_advanced_claim_expiration_check_rate);
 
-		//register for events
-		PluginManager pluginManager = this.getServer().getPluginManager();
-
-		//player events
-		PlayerEventHandler playerEventHandler = new PlayerEventHandler(this.dataStore, this);
-		pluginManager.registerEvents(playerEventHandler, this);
-
-		//block events
-		BlockEventHandler blockEventHandler = new BlockEventHandler(this.dataStore);
-		pluginManager.registerEvents(blockEventHandler, this);
-
-		//entity events
-		EntityEventHandler entityEventHandler = new EntityEventHandler(this.dataStore, this);
-		pluginManager.registerEvents(entityEventHandler, this);
+		registerEvents();
 
 		//if economy is enabled
-		if (Config.config_economy_claimBlocksPurchaseCost > 0 || Config.config_economy_claimBlocksSellValue > 0) {
-			//try to load Vault
-			GriefPrevention.AddLogEntry("GriefPrevention requires Vault for economy integration.");
-			GriefPrevention.AddLogEntry("Attempting to load Vault...");
-			RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-			GriefPrevention.AddLogEntry("Vault loaded successfully!");
-
-			//ask Vault to hook into an economy plugin
-			GriefPrevention.AddLogEntry("Looking for a Vault-compatible economy plugin...");
-			if (economyProvider != null) {
-				GriefPrevention.economy = economyProvider.getProvider();
-
-				//on success, display success message
-				if (GriefPrevention.economy != null) {
-					GriefPrevention.AddLogEntry("Hooked into economy: " + GriefPrevention.economy.getName() + ".");
-					GriefPrevention.AddLogEntry("Ready to buy/sell claim blocks!");
-				}
-
-				//otherwise error message
-				else {
-					GriefPrevention.AddLogEntry("ERROR: Vault was unable to find a supported economy plugin.  Either install a Vault-compatible economy plugin, or set both of the economy config variables to zero.");
-				}
-			}
-
-			//another error case
-			else {
-				GriefPrevention.AddLogEntry("ERROR: Vault was unable to find a supported economy plugin.  Either install a Vault-compatible economy plugin, or set both of the economy config variables to zero.");
-			}
-		}
+		economyHook();
 
 		//cache offline players
 		OfflinePlayer[] offlinePlayers = this.getServer().getOfflinePlayers();
@@ -284,13 +301,11 @@ public class GriefPrevention extends JavaPlugin {
 		namesThread.start();
 
 		//load ignore lists for any already-online players
-		@SuppressWarnings("unchecked")
-		Collection<Player> players = (Collection<Player>) GriefPrevention.instance.getServer().getOnlinePlayers();
-		for (Player player : players) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			new IgnoreLoaderThread(player.getUniqueId(), this.dataStore.getPlayerData(player.getUniqueId()).ignoredPlayers).start();
 		}
 
-		AddLogEntry("Boot finished.");
+		addLogEntry("Boot finished.");
 
 		try {
 			new MetricsHandler(this, dataMode);
@@ -299,16 +314,12 @@ public class GriefPrevention extends JavaPlugin {
 	}
 
 	private ClaimsMode configStringToClaimsMode(String configSetting) {
-		if (configSetting.equalsIgnoreCase("Survival")) {
-			return ClaimsMode.Survival;
-		} else if (configSetting.equalsIgnoreCase("Creative")) {
-			return ClaimsMode.Creative;
-		} else if (configSetting.equalsIgnoreCase("Disabled")) {
-			return ClaimsMode.Disabled;
-		} else if (configSetting.equalsIgnoreCase("SurvivalRequiringClaims")) {
-			return ClaimsMode.SurvivalRequiringClaims;
-		} else {
-			return null;
+		switch (configSetting.toLowerCase()){
+			case "survival": return ClaimsMode.Survival;
+			case "creative": return ClaimsMode.Creative;
+			case "disabled": return ClaimsMode.Disabled;
+			case "survivalrequiringclaims": return ClaimsMode.SurvivalRequiringClaims;
+			default: return null;
 		}
 	}
 
@@ -317,7 +328,7 @@ public class GriefPrevention extends JavaPlugin {
 		if (mode == IgnoreMode.NONE) {
 			playerData.ignoredPlayers.remove(ignoree.getUniqueId());
 		} else {
-			playerData.ignoredPlayers.put(ignoree.getUniqueId(), mode == IgnoreMode.STANDARD ? false : true);
+			playerData.ignoredPlayers.put(ignoree.getUniqueId(), mode != IgnoreMode.STANDARD);
 		}
 
 		playerData.ignoreListChanged = true;
@@ -327,18 +338,7 @@ public class GriefPrevention extends JavaPlugin {
 		}
 	}
 
-	public enum IgnoreMode {ADMIN, NONE, STANDARD}
-
-	@Deprecated
-	private String trustEntryToPlayerName(String entry) {
-		if (entry.startsWith("[") || entry.equals("public")) {
-			return entry;
-		} else {
-			return GriefPrevention.lookupPlayerName(entry);
-		}
-	}
-
-	public static String getfriendlyLocationString(Location location) {
+	public static String getFriendlyLocationString(Location location) {
 		return location.getWorld().getName() + ": x" + location.getBlockX() + ", z" + location.getBlockZ();
 	}
 
@@ -360,33 +360,32 @@ public class GriefPrevention extends JavaPlugin {
 		else if (claim.children.size() > 0 && !deleteTopLevelClaim) {
 			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.DeleteTopLevelClaim);
 			return true;
-		} else {
-			//delete it
-			claim.removeSurfaceFluids(null);
-			this.dataStore.deleteClaim(claim, true, false);
-
-			//if in a creative mode world, restore the claim area
-			if (GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner())) {
-				GriefPrevention.AddLogEntry(player.getName() + " abandoned a claim @ " + GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()));
-				GriefPrevention.sendMessage(player, TextMode.Warn, Messages.UnclaimCleanupWarning);
-				GriefPrevention.instance.restoreClaim(claim, 20L * 60 * 2);
-			}
-
-			//adjust claim blocks when abandoning a top level claim
-			if (Config.config_claims_abandonReturnRatio != 1.0D && claim.parent == null && claim.ownerID.equals(playerData.playerID)) {
-				playerData.setAccruedClaimBlocks(playerData.getAccruedClaimBlocks() - (int) Math.ceil((claim.getArea() * (1 - Config.config_claims_abandonReturnRatio))));
-			}
-
-			//tell the player how many claim blocks he has left
-			int remainingBlocks = playerData.getRemainingClaimBlocks();
-			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AbandonSuccess, String.valueOf(remainingBlocks));
-
-			//revert any current visualization
-			Visualization.revert(player);
-
-			playerData.warnedAboutMajorDeletion = false;
 		}
 
+		//delete it
+		claim.removeSurfaceFluids(null);
+		this.dataStore.deleteClaim(claim, true, false);
+
+		//if in a creative mode world, restore the claim area
+		if (GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner())) {
+			GriefPrevention.addLogEntry(player.getName() + " abandoned a claim @ " + GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()));
+			GriefPrevention.sendMessage(player, TextMode.Warn, Messages.UnclaimCleanupWarning);
+			GriefPrevention.instance.restoreClaim(claim, 20L * 60 * 2);
+		}
+
+		//adjust claim blocks when abandoning a top level claim
+		if (Config.config_claims_abandonReturnRatio != 1.0D && claim.parent == null && claim.ownerID.equals(playerData.playerID)) {
+			playerData.setAccruedClaimBlocks(playerData.getAccruedClaimBlocks() - (int) Math.ceil((claim.getArea() * (1 - Config.config_claims_abandonReturnRatio))));
+		}
+
+		//tell the player how many claim blocks he has left
+		int remainingBlocks = playerData.getRemainingClaimBlocks();
+		GriefPrevention.sendMessage(player, TextMode.Success, Messages.AbandonSuccess, String.valueOf(remainingBlocks));
+
+		//revert any current visualization
+		Visualization.revert(player);
+
+		playerData.warnedAboutMajorDeletion = false;
 		return true;
 
 	}
@@ -402,7 +401,7 @@ public class GriefPrevention extends JavaPlugin {
 		UUID recipientID = null;
 		if (recipientName.startsWith("[") && recipientName.endsWith("]")) {
 			permission = recipientName.substring(1, recipientName.length() - 1);
-			if (permission == null || permission.isEmpty()) {
+			if (permission.isEmpty()) {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.InvalidPermissionID);
 				return;
 			}
@@ -424,12 +423,10 @@ public class GriefPrevention extends JavaPlugin {
 		}
 
 		//determine which claims should be modified
-		ArrayList<Claim> targetClaims = new ArrayList<Claim>();
+		ArrayList<Claim> targetClaims = new ArrayList<>();
 		if (claim == null) {
 			PlayerData playerData = this.dataStore.getPlayerData(player.getUniqueId());
-			for (int i = 0; i < playerData.getClaims().size(); i++) {
-				targetClaims.add(playerData.getClaims().get(i));
-			}
+			targetClaims.addAll(playerData.getClaims());
 		} else {
 			//check permission here
 			if (claim.allowGrantPermission(player) != null) {
@@ -472,7 +469,7 @@ public class GriefPrevention extends JavaPlugin {
 		}
 
 		//if we didn't determine which claims to modify, tell the player to be specific
-		if (targetClaims.size() == 0) {
+		if (targetClaims.isEmpty()) {
 			GriefPrevention.sendMessage(player, TextMode.Err, Messages.GrantPermissionNoClaim);
 			return;
 		}
@@ -493,9 +490,7 @@ public class GriefPrevention extends JavaPlugin {
 		}
 
 		//apply changes
-		for (int i = 0; i < targetClaims.size(); i++) {
-			Claim currentClaim = targetClaims.get(i);
-
+		for (Claim currentClaim : targetClaims) {
 			if (permissionLevel == null) {
 				if (!currentClaim.managers.contains(identifierToAdd)) {
 					currentClaim.managers.add(identifierToAdd);
@@ -531,10 +526,10 @@ public class GriefPrevention extends JavaPlugin {
 	}
 
 	//helper method to resolve a player by name
-	ConcurrentHashMap<String, UUID> playerNameToIDMap = new ConcurrentHashMap<String, UUID>();
+	ConcurrentHashMap<String, UUID> playerNameToIDMap = new ConcurrentHashMap<>();
 
 	//thread to build the above cache
-	private class CacheOfflinePlayerNamesThread extends Thread {
+	private static class CacheOfflinePlayerNamesThread extends Thread {
 		private OfflinePlayer[] offlinePlayers;
 		private ConcurrentHashMap<String, UUID> playerNameToIDMap;
 
@@ -568,7 +563,6 @@ public class GriefPrevention extends JavaPlugin {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public OfflinePlayer resolvePlayerByName(String name) {
 		//try online players first
 		Player targetPlayer = this.getServer().getPlayerExact(name);
@@ -608,7 +602,7 @@ public class GriefPrevention extends JavaPlugin {
 	}
 
 	//cache for player name lookups, to save searches of all offline players
-	static void cacheUUIDNamePair(UUID playerID, String playerName) {
+	public static void cacheUUIDNamePair(UUID playerID, String playerName) {
 		//store the reverse mapping
 		GriefPrevention.instance.playerNameToIDMap.put(playerName, playerID);
 		GriefPrevention.instance.playerNameToIDMap.put(playerName.toLowerCase(), playerID);
@@ -620,7 +614,7 @@ public class GriefPrevention extends JavaPlugin {
 		try {
 			id = UUID.fromString(playerID);
 		} catch (IllegalArgumentException ex) {
-			GriefPrevention.AddLogEntry("Error: Tried to look up a local player name for invalid UUID: " + playerID);
+			GriefPrevention.addLogEntry("Error: Tried to look up a local player name for invalid UUID: " + playerID);
 			return "someone";
 		}
 
@@ -630,9 +624,7 @@ public class GriefPrevention extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		//save data for any online players
-		@SuppressWarnings("unchecked")
-		Collection<Player> players = (Collection<Player>) this.getServer().getOnlinePlayers();
-		for (Player player : players) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			UUID playerID = player.getUniqueId();
 			PlayerData playerData = this.dataStore.getPlayerData(playerID);
 			this.dataStore.savePlayerDataSync(playerID, playerData);
@@ -643,7 +635,7 @@ public class GriefPrevention extends JavaPlugin {
 		//dump any remaining unwritten log entries
 		this.customLogger.WriteEntries();
 
-		AddLogEntry("GriefPrevention disabled.");
+		addLogEntry("GriefPrevention disabled.");
 	}
 
 	//called when a player spawns, applies protection for that player if necessary
@@ -680,14 +672,14 @@ public class GriefPrevention extends JavaPlugin {
 		ItemStack[] armorStacks = inventory.getArmorContents();
 
 		//check armor slots, stop if any items are found
-		for (int i = 0; i < armorStacks.length; i++) {
-			if (!(armorStacks[i] == null || armorStacks[i].getType() == Material.AIR)) return false;
+		for (final ItemStack armorStack : armorStacks) {
+			if (!(armorStack == null || armorStack.getType() == Material.AIR)) return false;
 		}
 
 		//check other slots, stop if any items are found
 		ItemStack[] generalStacks = inventory.getContents();
-		for (int i = 0; i < generalStacks.length; i++) {
-			if (!(generalStacks[i] == null || generalStacks[i].getType() == Material.AIR)) return false;
+		for (final ItemStack generalStack : generalStacks) {
+			if (!(generalStack == null || generalStack.getType() == Material.AIR)) return false;
 		}
 
 		return true;
@@ -715,7 +707,7 @@ public class GriefPrevention extends JavaPlugin {
 			//otherwise find a safe place to teleport the player
 			else {
 				//find a safe height, a couple of blocks above the surface
-				GuaranteeChunkLoaded(candidateLocation);
+				guaranteeChunkLoaded(candidateLocation);
 				Block highestBlock = candidateLocation.getWorld().getHighestBlockAt(candidateLocation.getBlockX(), candidateLocation.getBlockZ());
 				Location destination = new Location(highestBlock.getWorld(), highestBlock.getX(), highestBlock.getY() + 2, highestBlock.getZ());
 				player.teleport(destination);
@@ -726,7 +718,7 @@ public class GriefPrevention extends JavaPlugin {
 
 	//ensures a piece of the managed world is loaded into server memory
 	//(generates the chunk if necessary)
-	private static void GuaranteeChunkLoaded(Location location) {
+	private static void guaranteeChunkLoaded(Location location) {
 		Chunk chunk = location.getChunk();
 		while (!chunk.isLoaded() || !chunk.load(true)) ;
 	}
@@ -747,7 +739,7 @@ public class GriefPrevention extends JavaPlugin {
 		if (message == null || message.length() == 0) return;
 
 		if (player == null) {
-			GriefPrevention.AddLogEntry(color + message);
+			GriefPrevention.addLogEntry(color + message);
 		} else {
 			player.sendMessage(color + message);
 		}
@@ -882,7 +874,6 @@ public class GriefPrevention extends JavaPlugin {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public void restoreChunk(Chunk chunk, int miny, boolean aggressiveMode, long delayInTicks, Player playerReceivingVisualization) {
 		//build a snapshot of this chunk, including 1 block boundary outside of the chunk all the way around
 		int maxHeight = chunk.getWorld().getMaxHeight();
@@ -906,32 +897,6 @@ public class GriefPrevention extends JavaPlugin {
 		//when done processing, this task will create a main thread task to actually update the world with processing results
 		RestoreNatureProcessingTask task = new RestoreNatureProcessingTask(snapshots, miny, chunk.getWorld().getEnvironment(), lesserBoundaryCorner.getBlock().getBiome(), lesserBoundaryCorner, greaterBoundaryCorner, this.getSeaLevel(chunk.getWorld()), aggressiveMode, GriefPrevention.instance.creativeRulesApply(lesserBoundaryCorner), playerReceivingVisualization);
 		GriefPrevention.instance.getServer().getScheduler().runTaskLaterAsynchronously(GriefPrevention.instance, task, delayInTicks);
-	}
-
-	private void parseMaterialListFromConfig(List<String> stringsToParse, MaterialCollection materialCollection) {
-		materialCollection.clear();
-
-		//for each string in the list
-		for (int i = 0; i < stringsToParse.size(); i++) {
-			//try to parse the string value into a material info
-			MaterialInfo materialInfo = MaterialInfo.fromString(stringsToParse.get(i));
-
-			//null value returned indicates an error parsing the string from the config file
-			if (materialInfo == null) {
-				//show error in log
-				GriefPrevention.AddLogEntry("ERROR: Unable to read a material entry from the config file.  Please update your config.yml.");
-
-				//update string, which will go out to config file to help user find the error entry
-				if (!stringsToParse.get(i).contains("can't")) {
-					stringsToParse.set(i, stringsToParse.get(i) + "     <-- can't understand this entry, see BukkitDev documentation");
-				}
-			}
-
-			//otherwise store the valid entry in config data
-			else {
-				materialCollection.Add(materialInfo);
-			}
-		}
 	}
 
 	public int getSeaLevel(World world) {
@@ -1036,74 +1001,18 @@ public class GriefPrevention extends JavaPlugin {
 
 	private void copyOldConfig() {
 		final Path sourcePath = Paths.get("plugins/GriefPreventionData/config.yml");
-		final Path newPath = Paths.get(getDataFolder()+"/config.yml");
+		final Path newPath = Paths.get(getDataFolder() + "/config.yml");
 		final File oldConfig = new File(sourcePath.toString());
-		if(oldConfig.exists() && getConfig() != null){
+		if (oldConfig.exists() && getConfig() != null) {
 			try {
 				Files.copy(sourcePath, newPath);
-			} catch (IOException e){
+			} catch (IOException e) {
 				getLogger().warning(e.getMessage());
 				getLogger().warning("There was a problem copying the old config. Please copy manually.");
 			}
 
 		}
 	}
-
-	/*
-    protected boolean isPlayerTrappedInPortal(Block block)
-	{
-		Material playerBlock = block.getType();
-		if (playerBlock == Material.PORTAL)
-			return true;
-		//Most blocks you can "stand" inside but cannot pass through (isSolid) usually can be seen through (!isOccluding)
-		//This can cause players to technically be considered not in a portal block, yet in reality is still stuck in the portal animation.
-		if ((!playerBlock.isSolid() || playerBlock.isOccluding())) //If it is _not_ such a block,
-		{
-			//Check the block above
-			playerBlock = block.getRelative(BlockFace.UP).getType();
-			if ((!playerBlock.isSolid() || playerBlock.isOccluding()))
-				return false; //player is not stuck
-		}
-		//Check if this block is also adjacent to a portal
-		return block.getRelative(BlockFace.EAST).getType() == Material.PORTAL
-				|| block.getRelative(BlockFace.WEST).getType() == Material.PORTAL
-				|| block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL
-				|| block.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL;
-	}
-
-	public void rescuePlayerTrappedInPortal(final Player player)
-	{
-		final Location oldLocation = player.getLocation();
-		if (!isPlayerTrappedInPortal(oldLocation.getBlock()))
-		{
-			//Note that he 'escaped' the portal frame
-			instance.portalReturnMap.remove(player.getUniqueId());
-			instance.portalReturnTaskMap.remove(player.getUniqueId());
-			return;
-		}
-
-		Location rescueLocation = portalReturnMap.get(player.getUniqueId());
-
-		if (rescueLocation == null)
-			return;
-
-		//Temporarily store the old location, in case the player wishes to undo the rescue
-		dataStore.getPlayerData(player.getUniqueId()).portalTrappedLocation = oldLocation;
-
-		player.teleport(rescueLocation);
-		sendMessage(player, TextMode.Info, Messages.RescuedFromPortalTrap);
-		portalReturnMap.remove(player.getUniqueId());
-
-		new BukkitRunnable()
-		{
-			public void run()
-			{
-				if (oldLocation == dataStore.getPlayerData(player.getUniqueId()).portalTrappedLocation)
-					dataStore.getPlayerData(player.getUniqueId()).portalTrappedLocation = null;
-			}
-		}.runTaskLater(this, 600L);
-	}
-	*/
 
 	//Track scheduled "rescues" so we can cancel them if the player happens to teleport elsewhere so we can cancel it.
 	ConcurrentHashMap<UUID, BukkitTask> portalReturnTaskMap = new ConcurrentHashMap<UUID, BukkitTask>();

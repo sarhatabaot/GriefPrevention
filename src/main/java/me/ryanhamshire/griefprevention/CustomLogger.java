@@ -153,7 +153,7 @@ class CustomLogger
                 catch(NumberFormatException e)
                 {
                     //throw this away - effectively ignoring any files without the correct filename format
-                    GriefPrevention.AddLogEntry("Ignoring an unexpected file in the abridged logs folder: " + file.getName(), CustomLogEntryTypes.Debug, true);
+                    GriefPrevention.addLogEntry("Ignoring an unexpected file in the abridged logs folder: " + file.getName(), CustomLogEntryTypes.Debug, true);
                 }
             }
         }

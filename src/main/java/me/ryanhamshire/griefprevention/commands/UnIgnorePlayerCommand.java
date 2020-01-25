@@ -2,10 +2,7 @@ package me.ryanhamshire.griefprevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import me.ryanhamshire.griefprevention.GriefPrevention;
-import me.ryanhamshire.griefprevention.Messages;
-import me.ryanhamshire.griefprevention.PlayerData;
-import me.ryanhamshire.griefprevention.TextMode;
+import me.ryanhamshire.griefprevention.*;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -32,7 +29,7 @@ public class UnIgnorePlayerCommand extends GPBaseCommand {
 			return;
 		}
 
-		plugin.setIgnoreStatus(player, targetPlayer, GriefPrevention.IgnoreMode.NONE);
+		plugin.setIgnoreStatus(player, targetPlayer, IgnoreMode.NONE);
 
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.UnIgnoreConfirmation);
 	}

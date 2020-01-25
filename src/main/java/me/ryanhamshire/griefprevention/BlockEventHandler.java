@@ -124,7 +124,7 @@ public class BlockEventHandler implements Listener
 	    Player player = event.getPlayer();
 		if(player == null) return;
 		
-		StringBuilder lines = new StringBuilder(" placed a sign @ " + GriefPrevention.getfriendlyLocationString(event.getBlock().getLocation()));
+		StringBuilder lines = new StringBuilder(" placed a sign @ " + GriefPrevention.getFriendlyLocationString(event.getBlock().getLocation()));
 		boolean notEmpty = false;
 		for(int i = 0; i < event.getLines().length; i++)
 		{
@@ -151,7 +151,7 @@ public class BlockEventHandler implements Listener
 		//if(notEmpty && (playerData.lastSignMessage == null || !playerData.lastSignMessage.equals(signMessage)))
 		if (notEmpty)
 		{		
-			GriefPrevention.AddLogEntry(player.getName() + lines.toString().replace("\n  ", ";"), null);
+			GriefPrevention.addLogEntry(player.getName() + lines.toString().replace("\n  ", ";"), null);
 			PlayerEventHandler.makeSocialLogEntry(player.getName(), signMessage);
 			//playerData.lastSignMessage = signMessage;
 			
@@ -651,7 +651,7 @@ public class BlockEventHandler implements Listener
 		}
 		catch(NoSuchMethodError exception)
 		{
-		    GriefPrevention.AddLogEntry("Your server is running an outdated version of 1.8 which has a griefing vulnerability.  Update your server (reruns buildtools.jar to get an updated server JAR file) to ensure players can't steal claimed blocks using pistons.");
+		    GriefPrevention.addLogEntry("Your server is running an outdated version of 1.8 which has a griefing vulnerability.  Update your server (reruns buildtools.jar to get an updated server JAR file) to ensure players can't steal claimed blocks using pistons.");
 		}
 	}
 	

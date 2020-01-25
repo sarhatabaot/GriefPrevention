@@ -136,7 +136,7 @@ public abstract class DataStore
 	//initialization!
 	void initialize() throws Exception
 	{
-		GriefPrevention.AddLogEntry(this.claims.size() + " total claims loaded.");
+		GriefPrevention.addLogEntry(this.claims.size() + " total claims loaded.");
 
 		//RoboMWM: ensure the nextClaimID is greater than any other claim ID. If not, data corruption occurred (out of storage space, usually).
 		for (Claim claim : this.claims)
@@ -145,7 +145,7 @@ public abstract class DataStore
 			{
 				GriefPrevention.instance.getLogger().severe("nextClaimID was lesser or equal to an already-existing claim ID!\n" +
 						"This usually happens if you ran out of storage space.");
-				GriefPrevention.AddLogEntry("Changing nextClaimID from " + nextClaimID + " to " + claim.id, CustomLogEntryTypes.Debug, false);
+				GriefPrevention.addLogEntry("Changing nextClaimID from " + nextClaimID + " to " + claim.id, CustomLogEntryTypes.Debug, false);
 				nextClaimID = claim.id + 1;
 			}
 		}
@@ -159,12 +159,12 @@ public abstract class DataStore
 		
 		//load up all the messages from messages.yml
 		this.loadMessages();
-		GriefPrevention.AddLogEntry("Customizable messages loaded.");
+		GriefPrevention.addLogEntry("Customizable messages loaded.");
 		
 		//if converting up from an earlier schema version, write all claims back to storage using the latest format
         if(this.getSchemaVersion() < latestSchemaVersion)
         {
-            GriefPrevention.AddLogEntry("Please wait.  Updating data format.");
+            GriefPrevention.addLogEntry("Please wait.  Updating data format.");
             
             for(Claim claim : this.claims)
             {
@@ -183,7 +183,7 @@ public abstract class DataStore
                 UUIDFetcher.correctedNames.clear();
             }
             
-            GriefPrevention.AddLogEntry("Update finished.");
+            GriefPrevention.addLogEntry("Update finished.");
         }
 		
 		//load list of soft mutes
@@ -196,7 +196,7 @@ public abstract class DataStore
 		try
 		{
 		    this.worldGuard = new WorldGuardWrapper();
-		    GriefPrevention.AddLogEntry("Successfully hooked into WorldGuard.");
+		    GriefPrevention.addLogEntry("Successfully hooked into WorldGuard.");
 		}
 		//if failed, world guard compat features will just be disabled.
 		catch(ClassNotFoundException exception){ }
@@ -227,7 +227,7 @@ public abstract class DataStore
                     catch(Exception e)
                     {
                         playerID = null;
-                        GriefPrevention.AddLogEntry("Failed to parse soft mute entry as a UUID: " + nextID);
+                        GriefPrevention.addLogEntry("Failed to parse soft mute entry as a UUID: " + nextID);
                     }
                     
                     //push it into the map
@@ -242,7 +242,7 @@ public abstract class DataStore
             }
             catch(Exception e)
             {
-                GriefPrevention.AddLogEntry("Failed to read from the soft mute data file: " + e.toString());
+                GriefPrevention.addLogEntry("Failed to read from the soft mute data file: " + e.toString());
                 e.printStackTrace();
             }
             
@@ -273,7 +273,7 @@ public abstract class DataStore
         }
         catch(Exception e)
         {
-            GriefPrevention.AddLogEntry("Failed to read from the banned words data file: " + e.toString());
+            GriefPrevention.addLogEntry("Failed to read from the banned words data file: " + e.toString());
             e.printStackTrace();
             return new ArrayList<String>();
         }
@@ -326,7 +326,7 @@ public abstract class DataStore
         //if any problem, log it
         catch(Exception e)
         {
-            GriefPrevention.AddLogEntry("Unexpected exception saving soft mute data: " + e.getMessage());
+            GriefPrevention.addLogEntry("Unexpected exception saving soft mute data: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -987,7 +987,7 @@ public abstract class DataStore
             //if any problem, log it
             catch(Exception e)
             {
-                GriefPrevention.AddLogEntry("GriefPrevention: Unexpected exception saving data for player \"" + playerID.toString() + "\": " + e.getMessage());
+                GriefPrevention.addLogEntry("GriefPrevention: Unexpected exception saving data for player \"" + playerID.toString() + "\": " + e.getMessage());
                 e.printStackTrace();
             }
 	    }
@@ -1386,7 +1386,7 @@ public abstract class DataStore
             //if resizing someone else's claim, make a log entry
             if(!player.getUniqueId().equals(playerData.claimResizing.ownerID) && playerData.claimResizing.parent == null)
             {
-                GriefPrevention.AddLogEntry(player.getName() + " resized " + playerData.claimResizing.getOwnerName() + "'s claim at " + GriefPrevention.getfriendlyLocationString(playerData.claimResizing.lesserBoundaryCorner) + ".");
+                GriefPrevention.addLogEntry(player.getName() + " resized " + playerData.claimResizing.getOwnerName() + "'s claim at " + GriefPrevention.getFriendlyLocationString(playerData.claimResizing.lesserBoundaryCorner) + ".");
             }
             
             //if increased to a sufficiently large size and no subdivisions yet, send subdivision instructions
@@ -1401,7 +1401,7 @@ public abstract class DataStore
             {
                 GriefPrevention.sendMessage(player, TextMode.Warn, Messages.UnclaimCleanupWarning);
                 GriefPrevention.instance.restoreClaim(oldClaim, 20L * 60 * 2);  //2 minutes
-                GriefPrevention.AddLogEntry(player.getName() + " shrank a claim @ " + GriefPrevention.getfriendlyLocationString(playerData.claimResizing.getLesserBoundaryCorner()));
+                GriefPrevention.addLogEntry(player.getName() + " shrank a claim @ " + GriefPrevention.getFriendlyLocationString(playerData.claimResizing.getLesserBoundaryCorner()));
             }
             
             //clean up
@@ -1700,7 +1700,7 @@ public abstract class DataStore
 			//if default is missing, log an error and use some fake data for now so that the plugin can run
 			if(messageData == null)
 			{
-				GriefPrevention.AddLogEntry("Missing message for " + messageID.name() + ".  Please contact the developer.");
+				GriefPrevention.addLogEntry("Missing message for " + messageID.name() + ".  Please contact the developer.");
 				messageData = new CustomizableMessage(messageID, "Missing message!  ID: " + messageID.name() + ".  Please contact a server admin.", null);
 			}
 			
@@ -1729,7 +1729,7 @@ public abstract class DataStore
 		}
 		catch(IOException exception)
 		{
-			GriefPrevention.AddLogEntry("Unable to write to the configuration file at \"" + DataStore.messagesFilePath + "\"");
+			GriefPrevention.addLogEntry("Unable to write to the configuration file at \"" + DataStore.messagesFilePath + "\"");
 		}
 		
 		defaults.clear();

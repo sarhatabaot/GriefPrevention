@@ -31,7 +31,7 @@ public class AdminClaimsListCommand extends GPBaseCommand {
 		{
 			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.ClaimsListHeader);
 			for (Claim claim : claims) {
-				GriefPrevention.sendMessage(player, TextMode.Instr, GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()));
+				GriefPrevention.sendMessage(player, TextMode.Instr, GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()));
 			}
 		}
 
