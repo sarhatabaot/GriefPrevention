@@ -34,7 +34,7 @@ import java.util.regex.Pattern;
 
 import co.aikar.commands.BukkitCommandManager;
 import me.ryanhamshire.GriefPrevention.DataStore.NoTransferException;
-import me.ryanhamshire.GriefPrevention.commands.ClaimCommand;
+import me.ryanhamshire.GriefPrevention.commands.*;
 import me.ryanhamshire.GriefPrevention.events.PreventBlockBreakEvent;
 import me.ryanhamshire.GriefPrevention.events.SaveTrappedPlayerEvent;
 import me.ryanhamshire.GriefPrevention.events.TrustChangedEvent;
@@ -259,10 +259,50 @@ public class GriefPrevention extends JavaPlugin
     }
     private void registerCommands(){
 		BukkitCommandManager commandManager = new BukkitCommandManager(this);
+		commandManager.registerCommand(new AbandonAllClaimsCommand(this));
+		commandManager.registerCommand(new AbandonClaimCommand(this));
+		commandManager.registerCommand(new AbandonTopLevelClaimCommand(this));
+		commandManager.registerCommand(new AccessTrustCommand(this));
+		commandManager.registerCommand(new AdjustBonusClaimBlocksCommand(this));
+		commandManager.registerCommand(new AdjustBonusClaimBlocksAllCommand(this));
+		commandManager.registerCommand(new AdminClaimsListCommand(this));
+		commandManager.registerCommand(new BasicClaimsCommand(this));
+		commandManager.registerCommand(new BlockInfoCommand(this));
+		commandManager.registerCommand(new ClaimBookCommand(this));
 		commandManager.registerCommand(new ClaimCommand(this));
+		commandManager.registerCommand(new ClaimExplosionsCommand(this));
+		commandManager.registerCommand(new ClaimListCommand(this));
+		commandManager.registerCommand(new ContainerTrustCommand(this));
+		commandManager.registerCommand(new DeleteAllClaimsCommand(this));
+		commandManager.registerCommand(new DeleteAllAdminClaimsCommand(this));
+		commandManager.registerCommand(new DeleteClaimCommand(this));
+		commandManager.registerCommand(new DeleteClaimsInWorldCommand(this));
+		commandManager.registerCommand(new ExtendClaimCommand(this));
+		commandManager.registerCommand(new GivePetCommand(this));
+		commandManager.registerCommand(new IgnorePlayerCommand(this));
+		commandManager.registerCommand(new IgnorePlayerListCommand(this));
+		commandManager.registerCommand(new PermissionTrustCommand(this));
+		commandManager.registerCommand(new ReloadCommand(this));
+		commandManager.registerCommand(new RestoreNatureCommand(this));
+		commandManager.registerCommand(new RestoreNatureAggressiveCommand(this));
+		commandManager.registerCommand(new RestoreNatureFillCommand(this));
+		commandManager.registerCommand(new RestrictSubClaimCommand(this));
+		commandManager.registerCommand(new SeparatePlayersCommand(this));
+		commandManager.registerCommand(new SetAccruedClaimBlocksCommand(this));
+		commandManager.registerCommand(new SiegeCommand(this));
+		commandManager.registerCommand(new SoftMuteCommand(this));
+		commandManager.registerCommand(new SubDivideClaimsCommand(this));
+		commandManager.registerCommand(new TransferClaimsCommand(this));
+		commandManager.registerCommand(new TrappedCommand(this));
+		commandManager.registerCommand(new TrustCommand(this));
+		commandManager.registerCommand(new TrustListCommand(this));
+		commandManager.registerCommand(new UnIgnorePlayerCommand(this));
+		commandManager.registerCommand(new UnlockDropsCommand(this));
+		commandManager.registerCommand(new UnlockItemsCommand(this));
+		commandManager.registerCommand(new UnSeparateCommand(this));
+		commandManager.registerCommand(new UnTrustCommand(this));
 	}
-	
-	//initializes well...   everything
+
 	@Override
 	public void onEnable()
 	{ 		
@@ -422,7 +462,7 @@ public class GriefPrevention extends JavaPlugin
 		catch (Throwable ignored){}
 	}
 	
-	private void loadConfig()
+	public void loadConfig()
 	{
 	    //load the config if it exists
         FileConfiguration config = YamlConfiguration.loadConfiguration(new File(DataStore.configFilePath));
@@ -805,8 +845,7 @@ public class GriefPrevention extends JavaPlugin
         this.config_logs_mutedChatEnabled = config.getBoolean("GriefPrevention.Abridged Logs.Included Entry Types.Muted Chat Messages", false);
         
         //claims mode by world
-		for(World world : this.config_claims_worldModes.keySet())
-		{
+		for(World world : this.config_claims_worldModes.keySet()) {
 			outConfig.set(
 					"GriefPrevention.Claims.Mode." + world.getName(),
 					this.config_claims_worldModes.get(world).name());
@@ -1010,6 +1049,8 @@ public class GriefPrevention extends JavaPlugin
 
     //handles slash commands
 	@SuppressWarnings("deprecation")
+	@Override
+	@Deprecated
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args){
 		
 		Player player = null;
@@ -2698,7 +2739,7 @@ public class GriefPrevention extends JavaPlugin
                 return true;
             }
             
-            this.setIgnoreStatus(player, targetPlayer, IgnoreMode.StandardIgnore);
+            this.setIgnoreStatus(player, targetPlayer, IgnoreMode.STANDARD);
 
             GriefPrevention.sendMessage(player, TextMode.Success, Messages.IgnoreConfirmation);
             
@@ -2727,7 +2768,7 @@ public class GriefPrevention extends JavaPlugin
                 return true;
             }
             
-            this.setIgnoreStatus(player, targetPlayer, IgnoreMode.None);
+            this.setIgnoreStatus(player, targetPlayer, IgnoreMode.NONE);
 
             GriefPrevention.sendMessage(player, TextMode.Success, Messages.UnIgnoreConfirmation);
             
@@ -2786,7 +2827,7 @@ public class GriefPrevention extends JavaPlugin
                 return true;
             }
             
-            this.setIgnoreStatus(targetPlayer, targetPlayer2, IgnoreMode.AdminIgnore);
+            this.setIgnoreStatus(targetPlayer, targetPlayer2, IgnoreMode.ADMIN);
 
             GriefPrevention.sendMessage(player, TextMode.Success, Messages.SeparateConfirmation);
             
@@ -2814,8 +2855,8 @@ public class GriefPrevention extends JavaPlugin
                 return true;
             }
             
-            this.setIgnoreStatus(targetPlayer, targetPlayer2, IgnoreMode.None);
-            this.setIgnoreStatus(targetPlayer2, targetPlayer, IgnoreMode.None);
+            this.setIgnoreStatus(targetPlayer, targetPlayer2, IgnoreMode.NONE);
+            this.setIgnoreStatus(targetPlayer2, targetPlayer, IgnoreMode.NONE);
 
             GriefPrevention.sendMessage(player, TextMode.Success, Messages.UnSeparateConfirmation);
             
@@ -2824,16 +2865,16 @@ public class GriefPrevention extends JavaPlugin
 		return false; 
 	}
 	
-	void setIgnoreStatus(OfflinePlayer ignorer, OfflinePlayer ignoree, IgnoreMode mode)
+	public void setIgnoreStatus(OfflinePlayer ignorer, OfflinePlayer ignoree, IgnoreMode mode)
 	{
 	    PlayerData playerData = this.dataStore.getPlayerData(ignorer.getUniqueId());
-        if(mode == IgnoreMode.None)
+        if(mode == IgnoreMode.NONE)
         {
             playerData.ignoredPlayers.remove(ignoree.getUniqueId());
         }
         else
         {
-            playerData.ignoredPlayers.put(ignoree.getUniqueId(), mode == IgnoreMode.StandardIgnore ? false : true);
+            playerData.ignoredPlayers.put(ignoree.getUniqueId(), mode == IgnoreMode.STANDARD ? false : true);
         }
         
         playerData.ignoreListChanged = true;
@@ -2843,8 +2884,8 @@ public class GriefPrevention extends JavaPlugin
             this.dataStore.clearCachedPlayerData(ignorer.getUniqueId());
         }
 	}
-	
-	public enum IgnoreMode	{None, StandardIgnore, AdminIgnore}
+
+	public enum IgnoreMode {ADMIN, NONE, STANDARD}
 
 	@Deprecated
 	private String trustEntryToPlayerName(String entry)
@@ -3177,7 +3218,7 @@ public class GriefPrevention extends JavaPlugin
 	}
 
 	//helper method to resolve a player name from the player's UUID
-    static String lookupPlayerName(UUID playerID) 
+    public static String lookupPlayerName(UUID playerID)
     {
         //parameter validation
         if(playerID == null) return "somebody";
@@ -3593,7 +3634,7 @@ public class GriefPrevention extends JavaPlugin
 		}		
 	}
 	
-	private static Block getTargetNonAirBlock(Player player, int maxDistance) throws IllegalStateException
+	public static Block getTargetNonAirBlock(Player player, int maxDistance) throws IllegalStateException
     {
         BlockIterator iterator = new BlockIterator(player.getLocation(), player.getEyeHeight(), maxDistance);
         Block result = player.getLocation().getBlock().getRelative(BlockFace.UP);
