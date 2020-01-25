@@ -21,7 +21,7 @@ public class UnTrustCommand extends GPBaseCommand {
 	public void onUnTrust(final Player player, final String name) {
 
 		//determine which claim the player is standing in
-		Claim claim = plugin.dataStore.getClaimAt(player.getLocation(), true /*ignore height*/, null);
+		Claim claim = plugin.dataStore.getClaimAt(player.getLocation(), true, null);
 
 		//bracket any permissions
 		String[] copyOriginArgs = null;
