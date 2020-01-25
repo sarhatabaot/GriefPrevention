@@ -30,6 +30,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import co.aikar.commands.BukkitCommandManager;
+import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.claim.ClaimPermission;
+import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.commands.*;
 import me.ryanhamshire.griefprevention.commands.claims.*;
 import me.ryanhamshire.griefprevention.config.Config;
@@ -315,10 +318,10 @@ public class GriefPrevention extends JavaPlugin {
 
 	private ClaimsMode configStringToClaimsMode(String configSetting) {
 		switch (configSetting.toLowerCase()){
-			case "survival": return ClaimsMode.Survival;
-			case "creative": return ClaimsMode.Creative;
-			case "disabled": return ClaimsMode.Disabled;
-			case "survivalrequiringclaims": return ClaimsMode.SurvivalRequiringClaims;
+			case "survival": return ClaimsMode.SURVIVAL;
+			case "creative": return ClaimsMode.CREATIVE;
+			case "disabled": return ClaimsMode.DISABLED;
+			case "survivalrequiringclaims": return ClaimsMode.SURVIVAL_REQUIRING_CLAIMS;
 			default: return null;
 		}
 	}
@@ -448,10 +451,10 @@ public class GriefPrevention extends JavaPlugin {
 			//otherwise just use the ClaimPermission enum values
 			else {
 				switch (permissionLevel) {
-					case Access:
+					case ACCESS:
 						errorMessage = claim.allowAccess(player);
 						break;
-					case Inventory:
+					case INVENTORY:
 						errorMessage = claim.allowContainers(player);
 						break;
 					default:
@@ -506,9 +509,9 @@ public class GriefPrevention extends JavaPlugin {
 		String permissionDescription;
 		if (permissionLevel == null) {
 			permissionDescription = this.dataStore.getMessage(Messages.PermissionsPermission);
-		} else if (permissionLevel == ClaimPermission.Build) {
+		} else if (permissionLevel == ClaimPermission.BUILD) {
 			permissionDescription = this.dataStore.getMessage(Messages.BuildPermission);
-		} else if (permissionLevel == ClaimPermission.Access) {
+		} else if (permissionLevel == ClaimPermission.ACCESS) {
 			permissionDescription = this.dataStore.getMessage(Messages.AccessPermission);
 		} else //ClaimPermission.Inventory
 		{
@@ -759,14 +762,14 @@ public class GriefPrevention extends JavaPlugin {
 	//checks whether players can create claims in a world
 	public boolean claimsEnabledForWorld(World world) {
 		ClaimsMode mode = Config.config_claims_worldModes.get(world);
-		return mode != null && mode != ClaimsMode.Disabled;
+		return mode != null && mode != ClaimsMode.DISABLED;
 	}
 
 	//determines whether creative anti-grief rules apply at a location
 	public boolean creativeRulesApply(Location location) {
 		if (!Config.config_creativeWorldsExist) return false;
 
-		return Config.config_claims_worldModes.get((location.getWorld())) == ClaimsMode.Creative;
+		return Config.config_claims_worldModes.get((location.getWorld())) == ClaimsMode.CREATIVE;
 	}
 
 	public String allowBuild(Player player, Location location) {
@@ -785,7 +788,7 @@ public class GriefPrevention extends JavaPlugin {
 		//wilderness rules
 		if (claim == null) {
 			//no building in the wilderness in creative mode
-			if (this.creativeRulesApply(location) || Config.config_claims_worldModes.get(location.getWorld()) == ClaimsMode.SurvivalRequiringClaims) {
+			if (this.creativeRulesApply(location) || Config.config_claims_worldModes.get(location.getWorld()) == ClaimsMode.SURVIVAL_REQUIRING_CLAIMS) {
 				//exception: when chest claims are enabled, players who have zero land claims and are placing a chest
 				if (material != Material.CHEST || playerData.getClaims().size() > 0 || Config.config_claims_automaticClaimsForNewPlayersRadius == -1) {
 					String reason = this.dataStore.getMessage(Messages.NoBuildOutsideClaims);
@@ -828,7 +831,7 @@ public class GriefPrevention extends JavaPlugin {
 		//wilderness rules
 		if (claim == null) {
 			//no building in the wilderness in creative mode
-			if (this.creativeRulesApply(location) || Config.config_claims_worldModes.get(location.getWorld()) == ClaimsMode.SurvivalRequiringClaims) {
+			if (this.creativeRulesApply(location) || Config.config_claims_worldModes.get(location.getWorld()) == ClaimsMode.SURVIVAL_REQUIRING_CLAIMS) {
 				String reason = this.dataStore.getMessage(Messages.NoBuildOutsideClaims);
 				if (player.hasPermission("griefprevention.ignoreclaims"))
 					reason += "  " + this.dataStore.getMessage(Messages.IgnoreClaimsAdvertisement);
