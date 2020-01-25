@@ -20,13 +20,8 @@ package me.ryanhamshire.GriefPrevention;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -201,7 +196,7 @@ public class GriefPrevention extends JavaPlugin {
 
 	public boolean config_trollFilterEnabled;                       //whether to auto-mute new players who use banned words right after joining
 
-	public HashMap<String, Integer> config_seaLevelOverride;        //override for sea level, because bukkit doesn't report the right value for all situations
+	public Map<String, Integer> config_seaLevelOverride;        //override for sea level, because bukkit doesn't report the right value for all situations
 
 	public boolean config_limitTreeGrowth;                          //whether trees should be prevented from growing into a claim from outside
 	public boolean config_checkPistonMovement;                      //whether to check piston movement
@@ -479,7 +474,7 @@ public class GriefPrevention extends JavaPlugin {
 		config_pvp_allowLavaNearPlayers = config.getBoolean("GriefPrevention.PvP.AllowLavaDumpingNearOtherPlayers", false);
 
 		//decide claim mode for each world
-		this.config_claims_worldModes = new ConcurrentHashMap<World, ClaimsMode>();
+		this.config_claims_worldModes = new ConcurrentHashMap<>();
 		this.config_creativeWorldsExist = false;
 		for (World world : worlds) {
 			//is it specified in the config file?
@@ -692,7 +687,7 @@ public class GriefPrevention extends JavaPlugin {
 		}
 
 		//default siege blocks
-		this.config_siege_blocks = new ArrayList<Material>();
+		this.config_siege_blocks = new ArrayList<>();
 		this.config_siege_blocks.add(Material.DIRT);
 		this.config_siege_blocks.add(Material.GRASS_BLOCK);
 		this.config_siege_blocks.add(Material.GRASS);
