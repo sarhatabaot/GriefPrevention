@@ -83,7 +83,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>co.aikar.commands</pattern>
-                                    <shadedPattern>me.ryanhamshire.GriefPrevention.acf</shadedPattern>
+                                    <shadedPattern>me.ryanhamshire.griefprevention.acf</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
