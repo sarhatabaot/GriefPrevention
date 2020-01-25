@@ -25,6 +25,7 @@ import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;
@@ -36,27 +37,22 @@ import org.bukkit.entity.Vehicle;
 
 //this main thread task revisits the location of a partially chopped tree from several minutes ago
 //if any part of the tree is still there and nothing else has been built in its place, remove the remaining parts
-class EntityCleanupTask implements Runnable 
-{
+class EntityCleanupTask implements Runnable {
 	//where to start cleaning in the list of entities
 	private double percentageStart;
-	
-	public EntityCleanupTask(double percentageStart)
-	{
+
+	public EntityCleanupTask(double percentageStart) {
 		this.percentageStart = percentageStart;
 	}
-	
+
 	@Override
-	public void run() 
-	{
+	public void run() {
 		ArrayList<World> worlds = new ArrayList<>();
-		for(World world : GriefPrevention.instance.getServer().getWorlds())
-	    {
-		    if(Config.config_claims_worldModes.get(world) == ClaimsMode.CREATIVE)
-		    {
-		        worlds.add(world);
-		    }
-	    }
+		for (World world : GriefPrevention.instance.getServer().getWorlds()) {
+			if (Config.config_claims_worldModes.get(world) == ClaimsMode.CREATIVE) {
+				worlds.add(world);
+			}
+		}
 
 		for (World world : worlds) {
 			List<Entity> entities = world.getEntities();
@@ -108,31 +104,28 @@ class EntityCleanupTask implements Runnable
 				}
 			}
 		}
-		
+
 		//starting and stopping point.  each execution of the task scans 5% of the server's claims
 		List<Claim> claims = GriefPrevention.instance.dataStore.claims;
-		int j = (int)(claims.size() * this.percentageStart);
-		int k = (int)(claims.size() * (this.percentageStart + .05));
-		for(; j < claims.size() && j < k; j++)
-		{
+		int j = (int) (claims.size() * this.percentageStart);
+		int k = (int) (claims.size() * (this.percentageStart + .05));
+		for (; j < claims.size() && j < k; j++) {
 			Claim claim = claims.get(j);
-			
+
 			//if it's a creative mode claim
-			if(GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner()))
-			{
+			if (GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner())) {
 				//check its entity count and remove any extras
 				claim.allowMoreEntities(true);
-			}			
+			}
 		}
-		
+
 		//schedule the next run of this task, in 3 minutes (20L is approximately 1 second)
 		double nextRunPercentageStart = this.percentageStart + .05;
-		if(nextRunPercentageStart > .99)
-		{
+		if (nextRunPercentageStart > .99) {
 			nextRunPercentageStart = 0;
 		}
-		
+
 		EntityCleanupTask task = new EntityCleanupTask(nextRunPercentageStart);
-		GriefPrevention.instance.getServer().getScheduler().scheduleSyncDelayedTask(GriefPrevention.instance, task, 20L * 60 * 1);
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(GriefPrevention.instance, task, 20L * 60 * 1);
 	}
 }

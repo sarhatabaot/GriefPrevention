@@ -18,7 +18,7 @@
 
 package me.ryanhamshire.griefprevention.siege;
 
-import me.ryanhamshire.griefprevention.DataStore;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.GriefPrevention;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import org.bukkit.entity.Player;

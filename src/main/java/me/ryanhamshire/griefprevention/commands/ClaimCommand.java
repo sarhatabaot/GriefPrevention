@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.griefprevention.*;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import me.ryanhamshire.griefprevention.visualization.VisualizationType;
 import org.bukkit.GameMode;

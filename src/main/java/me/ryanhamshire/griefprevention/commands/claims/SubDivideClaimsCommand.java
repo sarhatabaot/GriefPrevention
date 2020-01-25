@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.griefprevention.*;
 import me.ryanhamshire.griefprevention.commands.GPBaseCommand;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import org.bukkit.entity.Player;
 
 @CommandAlias("subdivideclaims|sc|subdivideclaim")

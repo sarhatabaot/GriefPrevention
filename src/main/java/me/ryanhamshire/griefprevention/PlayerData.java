@@ -24,6 +24,7 @@ import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 import me.ryanhamshire.griefprevention.claim.Claim;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.siege.SiegeData;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
@@ -76,7 +77,7 @@ public class PlayerData
 	boolean warnedAboutBuildingOutsideClaims = false;
 	
 	//timestamp when last siege ended (where this player was the defender)
-	long lastSiegeEndTimeStamp = 0;
+	public long lastSiegeEndTimeStamp = 0;
 	
 	//whether the player was kicked (set and used during logout)
 	boolean wasKicked = false;

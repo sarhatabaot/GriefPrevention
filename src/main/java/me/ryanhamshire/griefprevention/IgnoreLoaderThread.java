@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.io.Files;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 
 //loads ignore data from file into a hash map
 class IgnoreLoaderThread extends Thread

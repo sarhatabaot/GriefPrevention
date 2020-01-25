@@ -15,7 +15,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.*;
  
-class UUIDFetcher {
+public class UUIDFetcher {
     private static int PROFILES_PER_REQUEST = 100;
     private static final String PROFILE_URL = "https://api.mojang.com/profiles/minecraft";
     private final JSONParser jsonParser = new JSONParser();
@@ -23,10 +23,10 @@ class UUIDFetcher {
     private final boolean rateLimiting;
     
     //cache for username -> uuid lookups
-    static HashMap<String, UUID> lookupCache;
+    public static Map<String, UUID> lookupCache;
     
     //record of username -> proper casing updates
-    static HashMap<String, String> correctedNames;
+    public static Map<String, String> correctedNames;
  
     public UUIDFetcher(List<String> names, boolean rateLimiting) {
         this.names = names;
@@ -41,12 +41,12 @@ class UUIDFetcher {
     {
         if(lookupCache == null)
         {
-            lookupCache = new HashMap<String, UUID>();
+            lookupCache = new HashMap<>();
         }
         
         if(correctedNames == null)
         {
-            correctedNames = new HashMap<String, String>();
+            correctedNames = new HashMap<>();
         }
         
         GriefPrevention.addLogEntry("UUID conversion process started.  Please be patient - this may take a while.");
@@ -158,11 +158,9 @@ class UUIDFetcher {
         else
         {
             GriefPrevention.addLogEntry("Generating offline mode UUIDs for remaining unresolved players...");
-            
-            for(int i = 0; i < names.size(); i++)
-            {
-                String name = names.get(i);
-                UUID uuid = java.util.UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
+
+            for (String name : names) {
+                UUID uuid = UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
                 GriefPrevention.addLogEntry(name + " --> " + uuid.toString());
                 lookupCache.put(name, uuid);
                 lookupCache.put(name.toLowerCase(), uuid);

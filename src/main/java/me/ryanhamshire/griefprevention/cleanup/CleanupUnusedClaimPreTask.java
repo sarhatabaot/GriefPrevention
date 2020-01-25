@@ -50,7 +50,7 @@ public class CleanupUnusedClaimPreTask extends BukkitRunnable {
 		if (ownerInfo.isOnline()) return;
 		if (ownerInfo.getLastPlayed() <= 0) return;
 
-		GriefPrevention.addLogEntry("Looking for expired claims.  Checking data for " + ownerID.toString(), CustomLogEntryTypes.DEBUG, true);
+		GriefPrevention.addLogEntry("Looking for expired claims. Checking data for " + ownerID.toString(), CustomLogEntryTypes.DEBUG, true);
 
 		//skip claims belonging to exempted players based on block totals in config
 		int bonusBlocks = ownerData.getBonusClaimBlocks();

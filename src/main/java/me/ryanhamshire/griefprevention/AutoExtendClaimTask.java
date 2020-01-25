@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.restore.RestoreNatureProcessingTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;

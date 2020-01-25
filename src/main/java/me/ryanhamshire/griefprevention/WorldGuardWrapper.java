@@ -16,7 +16,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
-class WorldGuardWrapper
+public class WorldGuardWrapper
 {
     private WorldGuardPlugin worldGuard = null;
 

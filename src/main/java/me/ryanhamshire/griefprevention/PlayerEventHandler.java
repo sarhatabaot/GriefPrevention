@@ -20,7 +20,9 @@ package me.ryanhamshire.griefprevention;
 
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
+import me.ryanhamshire.griefprevention.commands.CommandCategory;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.events.VisualizationEvent;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.spam.SpamAnalysisResult;
@@ -358,7 +360,7 @@ public class PlayerEventHandler implements Listener {
 		PlayerData playerData = null;
 
 		//if a whisper
-		if (category == CommandCategory.Whisper && args.length > 1) {
+		if (category == CommandCategory.WHISPER && args.length > 1) {
 			//determine target player, might be NULL
 			Player targetPlayer = instance.getServer().getPlayer(args[1]);
 
@@ -420,13 +422,13 @@ public class PlayerEventHandler implements Listener {
 		}
 
 		//soft mute for chat slash commands
-		if (category == CommandCategory.Chat && this.dataStore.isSoftMuted(player.getUniqueId())) {
+		if (category == CommandCategory.CHAT && this.dataStore.isSoftMuted(player.getUniqueId())) {
 			event.setCancelled(true);
 			return;
 		}
 
 		//if the slash command used is in the list of monitored commands, treat it like a chat message (see above)
-		boolean isMonitoredCommand = (category == CommandCategory.Chat || category == CommandCategory.Whisper);
+		boolean isMonitoredCommand = (category == CommandCategory.CHAT || category == CommandCategory.WHISPER);
 		if (isMonitoredCommand) {
 			//if anti spam enabled, check for spam
 			if (Config.config_spam_enabled) {
@@ -509,12 +511,12 @@ public class PlayerEventHandler implements Listener {
 		}
 
 		//if any of those aliases are in the chat list or whisper list, then we know the category for that command
-		category = CommandCategory.None;
+		category = CommandCategory.NONE;
 		for (String alias : aliases) {
 			if (Config.config_eavesdrop_whisperCommands.contains("/" + alias)) {
-				category = CommandCategory.Whisper;
+				category = CommandCategory.WHISPER;
 			} else if (Config.config_spam_monitorSlashCommands.contains("/" + alias)) {
-				category = CommandCategory.Chat;
+				category = CommandCategory.CHAT;
 			}
 
 			//remember the categories for later

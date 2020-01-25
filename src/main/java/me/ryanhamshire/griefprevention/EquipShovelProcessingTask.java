@@ -20,6 +20,7 @@ package me.ryanhamshire.griefprevention;
 
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import me.ryanhamshire.griefprevention.visualization.VisualizationType;
 import org.bukkit.entity.Player;
@@ -64,7 +65,7 @@ class EquipShovelProcessingTask implements Runnable
 		//link to a video demo of land claiming, based on world type
 		if(GriefPrevention.instance.creativeRulesApply(player.getLocation()))
 		{
-			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.CreativeBasicsVideo2, DataStore.CREATIVE_VIDEO_URL);			
+			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.CreativeBasicsVideo2, DataStore.CREATIVE_VIDEO_URL);
 		}
 		else if(GriefPrevention.instance.claimsEnabledForWorld(player.getLocation().getWorld()))
 		{

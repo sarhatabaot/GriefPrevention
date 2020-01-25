@@ -21,6 +21,7 @@
 import java.util.Collection;
 
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.events.AccrueClaimBlocksEvent;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import org.bukkit.entity.Player;

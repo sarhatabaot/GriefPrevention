@@ -37,11 +37,16 @@ import me.ryanhamshire.griefprevention.cleanup.FindUnusedClaimsTask;
 import me.ryanhamshire.griefprevention.commands.*;
 import me.ryanhamshire.griefprevention.commands.claims.*;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
+import me.ryanhamshire.griefprevention.datastore.DatabaseDataStore;
+import me.ryanhamshire.griefprevention.datastore.FlatFileDataStore;
 import me.ryanhamshire.griefprevention.events.PreventBlockBreakEvent;
 import me.ryanhamshire.griefprevention.events.TrustChangedEvent;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.logging.CustomLogger;
 import me.ryanhamshire.griefprevention.metrics.MetricsHandler;
+import me.ryanhamshire.griefprevention.restore.BlockSnapshot;
+import me.ryanhamshire.griefprevention.restore.RestoreNatureProcessingTask;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import net.milkbowl.vault.economy.Economy;
 

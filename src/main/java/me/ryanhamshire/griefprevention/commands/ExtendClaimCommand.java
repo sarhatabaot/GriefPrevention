@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.griefprevention.*;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

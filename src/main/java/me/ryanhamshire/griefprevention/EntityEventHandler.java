@@ -21,6 +21,7 @@ package me.ryanhamshire.griefprevention;
 import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.config.Config;
+import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.events.PreventPvPEvent;
 import me.ryanhamshire.griefprevention.events.ProtectDeathDropsEvent;
 import org.bukkit.Bukkit;
