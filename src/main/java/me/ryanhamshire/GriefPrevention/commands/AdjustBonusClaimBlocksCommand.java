@@ -1,6 +1,7 @@
 package me.ryanhamshire.GriefPrevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -13,19 +14,18 @@ public class AdjustBonusClaimBlocksCommand extends GPBaseCommand {
 		super(plugin);
 	}
 
-
+	@Default
 	public void onAdjust(final Player player, final String name, final int amount) {
 		//parse the adjustment amount
-		int adjustment = amount;
 
 		//if granting blocks to all players with a specific permission
 		if (args[0].startsWith("[") && args[0].endsWith("]")) {
 			String permissionIdentifier = args[0].substring(1, args[0].length() - 1);
-			int newTotal = plugin.dataStore.adjustGroupBonusBlocks(permissionIdentifier, adjustment);
+			int newTotal = plugin.dataStore.adjustGroupBonusBlocks(permissionIdentifier, amount);
 
-			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustGroupBlocksSuccess, permissionIdentifier, String.valueOf(adjustment), String.valueOf(newTotal));
+			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustGroupBlocksSuccess, permissionIdentifier, String.valueOf(amount), String.valueOf(newTotal));
 			if (player != null)
-				GriefPrevention.AddLogEntry(player.getName() + " adjusted " + permissionIdentifier + "'s bonus claim blocks by " + adjustment + ".");
+				GriefPrevention.AddLogEntry(player.getName() + " adjusted " + permissionIdentifier + "'s bonus claim blocks by " + amount + ".");
 
 			return;
 		}
@@ -47,12 +47,12 @@ public class AdjustBonusClaimBlocksCommand extends GPBaseCommand {
 
 		//give blocks to player
 		PlayerData playerData = plugin.dataStore.getPlayerData(targetPlayer.getUniqueId());
-		playerData.setBonusClaimBlocks(playerData.getBonusClaimBlocks() + adjustment);
+		playerData.setBonusClaimBlocks(playerData.getBonusClaimBlocks() + amount);
 		plugin.dataStore.savePlayerData(targetPlayer.getUniqueId(), playerData);
 
-		GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustBlocksSuccess, targetPlayer.getName(), String.valueOf(adjustment), String.valueOf(playerData.getBonusClaimBlocks()));
+		GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustBlocksSuccess, targetPlayer.getName(), String.valueOf(amount), String.valueOf(playerData.getBonusClaimBlocks()));
 		if (player != null)
-			GriefPrevention.AddLogEntry(player.getName() + " adjusted " + targetPlayer.getName() + "'s bonus claim blocks by " + adjustment + ".", CustomLogEntryTypes.AdminActivity);
+			GriefPrevention.AddLogEntry(player.getName() + " adjusted " + targetPlayer.getName() + "'s bonus claim blocks by " + amount + ".", CustomLogEntryTypes.AdminActivity);
 
 	}
 }
