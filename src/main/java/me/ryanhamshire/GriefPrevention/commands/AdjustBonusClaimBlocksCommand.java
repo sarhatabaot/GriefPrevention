@@ -19,8 +19,8 @@ public class AdjustBonusClaimBlocksCommand extends GPBaseCommand {
 		//parse the adjustment amount
 
 		//if granting blocks to all players with a specific permission
-		if (args[0].startsWith("[") && args[0].endsWith("]")) {
-			String permissionIdentifier = args[0].substring(1, args[0].length() - 1);
+		if (getOrigArgs()[0].startsWith("[") && getOrigArgs()[0].endsWith("]")) {
+			String permissionIdentifier = getOrigArgs()[0].substring(1, getOrigArgs()[0].length() - 1);
 			int newTotal = plugin.dataStore.adjustGroupBonusBlocks(permissionIdentifier, amount);
 
 			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustGroupBlocksSuccess, permissionIdentifier, String.valueOf(amount), String.valueOf(newTotal));
