@@ -48,10 +48,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <targetPath>.</targetPath>
-                <includes>
-                    <include>plugin.yml</include>
-                </includes>
+                <excludes>
+                    <exclude>Public Api.txt</exclude>
+                </excludes>
             </resource>
         </resources>
         <plugins>

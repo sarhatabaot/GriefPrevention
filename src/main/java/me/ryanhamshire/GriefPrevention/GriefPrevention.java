@@ -19,7 +19,11 @@
 package me.ryanhamshire.GriefPrevention;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,6 +69,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockIterator;
+import org.jetbrains.annotations.NotNull;
 
 public class GriefPrevention extends JavaPlugin {
 	//for convenience, a reference to the instance of this plugin
@@ -160,8 +165,9 @@ public class GriefPrevention extends JavaPlugin {
 		instance = this;
 		log = instance.getLogger();
 
-
-		saveDefaultConfig();
+		if(!new File(getDataFolder()+"/config.yml").exists())
+			copyOldConfig();
+		else saveDefaultConfig();
 
 		Config.init(this);
 
@@ -298,6 +304,7 @@ public class GriefPrevention extends JavaPlugin {
 		} catch (Throwable ignored) {
 		}
 	}
+
 	private ClaimsMode configStringToClaimsMode(String configSetting) {
 		if (configSetting.equalsIgnoreCase("Survival")) {
 			return ClaimsMode.Survival;
@@ -1002,9 +1009,7 @@ public class GriefPrevention extends JavaPlugin {
 				player.getStatistic(Statistic.PICKUP, Material.DARK_OAK_LOG) > 0) return false;
 
 		PlayerData playerData = instance.dataStore.getPlayerData(player.getUniqueId());
-		if (playerData.getClaims().size() > 0) return false;
-
-		return true;
+		return playerData.getClaims().isEmpty();
 	}
 
 	public static void banPlayer(Player player, String reason, String source) {
@@ -1036,7 +1041,22 @@ public class GriefPrevention extends JavaPlugin {
 				!claim.isAdminClaim() && Config.config_pvp_noCombatInPlayerLandClaims;
 	}
 
-    /*
+	private void copyOldConfig() {
+		final Path sourcePath = Paths.get("plugins/GriefPreventionData/config.yml");
+		final Path newPath = Paths.get(getDataFolder()+"/config.yml");
+		final File oldConfig = new File(sourcePath.toString());
+		if(oldConfig.exists() && getConfig() != null){
+			try {
+				Files.copy(sourcePath, newPath);
+			} catch (IOException e){
+				getLogger().warning(e.getMessage());
+				getLogger().warning("There was a problem copying the old config. Please copy manually.");
+			}
+
+		}
+	}
+
+	/*
     protected boolean isPlayerTrappedInPortal(Block block)
 	{
 		Material playerBlock = block.getType();
