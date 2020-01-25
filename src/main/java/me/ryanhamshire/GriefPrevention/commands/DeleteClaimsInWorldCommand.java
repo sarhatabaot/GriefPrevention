@@ -8,7 +8,7 @@ import me.ryanhamshire.GriefPrevention.Messages;
 import me.ryanhamshire.GriefPrevention.TextMode;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
@@ -19,7 +19,7 @@ public class DeleteClaimsInWorldCommand extends GPBaseCommand {
 	}
 
 	@Default
-	public void onDelete(final ConsoleCommandSender consoleCommandSender, final String worldName) {
+	public void onDelete(final CommandSender consoleCommandSender, final String worldName) {
 
 		//try to find the specified world
 		World world = Bukkit.getServer().getWorld(worldName);
