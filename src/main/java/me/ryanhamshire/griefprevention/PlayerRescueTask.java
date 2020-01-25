@@ -70,6 +70,6 @@ public class PlayerRescueTask implements Runnable
 		}
 		
 		//log entry, in case admins want to investigate the "trap"
-		GriefPrevention.AddLogEntry("Rescued trapped player " + player.getName() + " from " + GriefPrevention.getfriendlyLocationString(this.location) + " to " + GriefPrevention.getfriendlyLocationString(this.destination) + ".");		
+		GriefPrevention.addLogEntry("Rescued trapped player " + player.getName() + " from " + GriefPrevention.getFriendlyLocationString(this.location) + " to " + GriefPrevention.getFriendlyLocationString(this.destination) + ".");
 	}
 }

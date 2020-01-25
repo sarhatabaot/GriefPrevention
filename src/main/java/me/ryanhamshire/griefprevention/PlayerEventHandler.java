@@ -180,7 +180,7 @@ public class PlayerEventHandler implements Listener
 		    recipients.clear();
 		    recipients.addAll(recipientsToKeep);
 		    
-		    instance.AddLogEntry(notificationMessage, CustomLogEntryTypes.MutedChat, false);
+		    instance.addLogEntry(notificationMessage, CustomLogEntryTypes.MutedChat, false);
 		}
 		
 		//troll and excessive profanity filter
@@ -216,8 +216,8 @@ public class PlayerEventHandler implements Listener
             //otherwise assume chat troll and mute all chat from this sender until an admin says otherwise
             else if(Config.config_trollFilterEnabled)
             {
-            	instance.AddLogEntry("Auto-muted new player " + player.getName() + " for profanity shortly after join.  Use /SoftMute to undo.", CustomLogEntryTypes.AdminActivity);
-                instance.AddLogEntry(notificationMessage, CustomLogEntryTypes.MutedChat, false);
+            	instance.addLogEntry("Auto-muted new player " + player.getName() + " for profanity shortly after join.  Use /SoftMute to undo.", CustomLogEntryTypes.AdminActivity);
+                instance.addLogEntry(notificationMessage, CustomLogEntryTypes.MutedChat, false);
                 instance.dataStore.toggleSoftMute(player.getUniqueId());
             }
         }
@@ -350,7 +350,7 @@ public class PlayerEventHandler implements Listener
             if(Config.config_spam_banOffenders)
             {
                 //log entry
-                instance.AddLogEntry("Banning " + player.getName() + " for spam.", CustomLogEntryTypes.AdminActivity);
+                instance.addLogEntry("Banning " + player.getName() + " for spam.", CustomLogEntryTypes.AdminActivity);
                 
                 //kick and ban
                 PlayerKickBanTask task = new PlayerKickBanTask(player, Config.config_spam_banMessage, "GriefPrevention Anti-Spam",true);
@@ -359,7 +359,7 @@ public class PlayerEventHandler implements Listener
             else
             {
                 //log entry
-                instance.AddLogEntry("Kicking " + player.getName() + " for spam.", CustomLogEntryTypes.AdminActivity);
+                instance.addLogEntry("Kicking " + player.getName() + " for spam.", CustomLogEntryTypes.AdminActivity);
                 
                 //just kick
                 PlayerKickBanTask task = new PlayerKickBanTask(player, "", "GriefPrevention Anti-Spam", false);
@@ -371,14 +371,14 @@ public class PlayerEventHandler implements Listener
         {
             //warn and log
             instance.sendMessage(player, TextMode.Warn, Config.config_spam_warningMessage, 10L);
-            instance.AddLogEntry("Warned " + player.getName() + " about spam penalties.", CustomLogEntryTypes.Debug, true);
+            instance.addLogEntry("Warned " + player.getName() + " about spam penalties.", CustomLogEntryTypes.Debug, true);
         }
         
         if(result.getMuteReason() != null)
         {
             //mute and log
-            instance.AddLogEntry("Muted " + result.getMuteReason()+ ".");
-            instance.AddLogEntry("Muted " + player.getName() + " " + result.getMuteReason() + ":" + message, CustomLogEntryTypes.Debug, true);
+            instance.addLogEntry("Muted " + result.getMuteReason()+ ".");
+            instance.addLogEntry("Muted " + player.getName() + " " + result.getMuteReason() + ":" + message, CustomLogEntryTypes.Debug, true);
 
             return true;
         }
@@ -611,7 +611,7 @@ public class PlayerEventHandler implements Listener
         
         longestNameLength = Math.max(longestNameLength, name.length());
         //TODO: cleanup static
-        GriefPrevention.AddLogEntry(entryBuilder.toString(), CustomLogEntryTypes.SocialActivity, true);
+        GriefPrevention.addLogEntry(entryBuilder.toString(), CustomLogEntryTypes.SocialActivity, true);
     }
 
     private ConcurrentHashMap<UUID, Date> lastLoginThisServerSessionMap = new ConcurrentHashMap<UUID, Date>();
@@ -742,7 +742,7 @@ public class PlayerEventHandler implements Listener
 					//otherwise if that account is still banned, ban this account, too
 					else
 					{
-						instance.AddLogEntry("Auto-banned new player " + player.getName() + " because that account is using an IP address very recently used by banned player " + info.bannedAccountName + " (" + info.address.toString() + ").", CustomLogEntryTypes.AdminActivity);
+						instance.addLogEntry("Auto-banned new player " + player.getName() + " because that account is using an IP address very recently used by banned player " + info.bannedAccountName + " (" + info.address.toString() + ").", CustomLogEntryTypes.AdminActivity);
 						
 						//notify any online ops
 						@SuppressWarnings("unchecked")
@@ -821,7 +821,7 @@ public class PlayerEventHandler implements Listener
 				{
 					if (player.getPortalCooldown() > 8 && player.hasMetadata("GP_PORTALRESCUE"))
 					{
-						instance.AddLogEntry("Rescued " + player.getName() + " from a nether portal.\nTeleported from " + player.getLocation().toString() + " to " + ((Location)player.getMetadata("GP_PORTALRESCUE").get(0).value()).toString(), CustomLogEntryTypes.Debug);
+						instance.addLogEntry("Rescued " + player.getName() + " from a nether portal.\nTeleported from " + player.getLocation().toString() + " to " + ((Location)player.getMetadata("GP_PORTALRESCUE").get(0).value()).toString(), CustomLogEntryTypes.Debug);
 						player.teleport((Location)player.getMetadata("GP_PORTALRESCUE").get(0).value());
 						player.removeMetadata("GP_PORTALRESCUE", instance);
 					}
@@ -1506,7 +1506,7 @@ public class PlayerEventHandler implements Listener
 		    
 		    if(makeLogEntry)
 	        {
-	            instance.AddLogEntry(player.getName() + " placed suspicious " + bucketEvent.getBucket().name() + " @ " + instance.getfriendlyLocationString(block.getLocation()), CustomLogEntryTypes.SuspiciousActivity);
+	            instance.addLogEntry(player.getName() + " placed suspicious " + bucketEvent.getBucket().name() + " @ " + instance.getFriendlyLocationString(block.getLocation()), CustomLogEntryTypes.SuspiciousActivity);
 	        }
 		}
 	}

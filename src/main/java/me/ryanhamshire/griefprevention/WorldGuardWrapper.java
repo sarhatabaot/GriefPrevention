@@ -55,7 +55,7 @@ class WorldGuardWrapper
         }
         catch (Throwable rock)
         {
-            GriefPrevention.AddLogEntry("WorldGuard was found but unable to hook into. It could be that you're " +
+            GriefPrevention.addLogEntry("WorldGuard was found but unable to hook into. It could be that you're " +
                     "using an outdated version or WorldEdit broke their API... again." +
                     "Consider updating/downgrading/removing WorldGuard or disable WorldGuard integration in GP's config " +
                     "(CreationRequiresWorldGuardBuildPermission). If you're going to report this please be kind because " +

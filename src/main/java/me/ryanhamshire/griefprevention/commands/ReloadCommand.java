@@ -21,7 +21,7 @@ public class ReloadCommand extends GPBaseCommand{
 			GriefPrevention.sendMessage((Player) player, TextMode.Success, "Configuration updated.  If you have updated your Grief Prevention JAR, you still need to /reload or reboot your server.");
 		}
 		else {
-			GriefPrevention.AddLogEntry("Configuration updated.  If you have updated your Grief Prevention JAR, you still need to /reload or reboot your server.");
+			GriefPrevention.addLogEntry("Configuration updated.  If you have updated your Grief Prevention JAR, you still need to /reload or reboot your server.");
 		}
 	}
 }

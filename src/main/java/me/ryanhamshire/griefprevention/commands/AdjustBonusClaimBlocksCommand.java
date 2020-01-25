@@ -25,7 +25,7 @@ public class AdjustBonusClaimBlocksCommand extends GPBaseCommand {
 
 			GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustGroupBlocksSuccess, permissionIdentifier, String.valueOf(amount), String.valueOf(newTotal));
 			if (player != null)
-				GriefPrevention.AddLogEntry(player.getName() + " adjusted " + permissionIdentifier + "'s bonus claim blocks by " + amount + ".");
+				GriefPrevention.addLogEntry(player.getName() + " adjusted " + permissionIdentifier + "'s bonus claim blocks by " + amount + ".");
 
 			return;
 		}
@@ -52,7 +52,7 @@ public class AdjustBonusClaimBlocksCommand extends GPBaseCommand {
 
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.AdjustBlocksSuccess, targetPlayer.getName(), String.valueOf(amount), String.valueOf(playerData.getBonusClaimBlocks()));
 		if (player != null)
-			GriefPrevention.AddLogEntry(player.getName() + " adjusted " + targetPlayer.getName() + "'s bonus claim blocks by " + amount + ".", CustomLogEntryTypes.AdminActivity);
+			GriefPrevention.addLogEntry(player.getName() + " adjusted " + targetPlayer.getName() + "'s bonus claim blocks by " + amount + ".", CustomLogEntryTypes.AdminActivity);
 
 	}
 }

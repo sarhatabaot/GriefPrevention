@@ -53,7 +53,7 @@ public class TransferClaimsCommand extends GPBaseCommand {
 
 		//confirm
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.TransferSuccess);
-		GriefPrevention.AddLogEntry(player.getName() + " transferred a claim at " + GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()) + " to " + ownerName + ".", CustomLogEntryTypes.AdminActivity);
+		GriefPrevention.addLogEntry(player.getName() + " transferred a claim at " + GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()) + " to " + ownerName + ".", CustomLogEntryTypes.AdminActivity);
 
 	}
 }

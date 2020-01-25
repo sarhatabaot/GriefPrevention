@@ -49,9 +49,9 @@ class UUIDFetcher {
             correctedNames = new HashMap<String, String>();
         }
         
-        GriefPrevention.AddLogEntry("UUID conversion process started.  Please be patient - this may take a while.");
+        GriefPrevention.addLogEntry("UUID conversion process started.  Please be patient - this may take a while.");
         
-        GriefPrevention.AddLogEntry("Mining your local world data to save calls to Mojang...");
+        GriefPrevention.addLogEntry("Mining your local world data to save calls to Mojang...");
         OfflinePlayer [] players = GriefPrevention.instance.getServer().getOfflinePlayers();
         for(OfflinePlayer player : players)
         {
@@ -64,27 +64,27 @@ class UUIDFetcher {
         }
         
         //try to get correct casing from local data
-        GriefPrevention.AddLogEntry("Checking local server data to get correct casing for player names...");
+        GriefPrevention.addLogEntry("Checking local server data to get correct casing for player names...");
         for(int i = 0; i < names.size(); i++)
         {
             String name = names.get(i);
             String correctCasingName = correctedNames.get(name);
             if(correctCasingName != null && !name.equals(correctCasingName))
             {
-                GriefPrevention.AddLogEntry(name + " --> " + correctCasingName);
+                GriefPrevention.addLogEntry(name + " --> " + correctCasingName);
                 names.set(i, correctCasingName); 
             }
         }
         
         //look for local uuid's first
-        GriefPrevention.AddLogEntry("Checking local server data for UUIDs already seen...");
+        GriefPrevention.addLogEntry("Checking local server data for UUIDs already seen...");
         for(int i = 0; i < names.size(); i++)
         {
             String name = names.get(i);
             UUID uuid = lookupCache.get(name);
             if(uuid != null)
             {
-                GriefPrevention.AddLogEntry(name + " --> " + uuid.toString());
+                GriefPrevention.addLogEntry(name + " --> " + uuid.toString());
                 names.remove(i--);
             }
         }
@@ -92,7 +92,7 @@ class UUIDFetcher {
         //for online mode, call Mojang to resolve the rest
         if(GriefPrevention.instance.getServer().getOnlineMode())
         {
-            GriefPrevention.AddLogEntry("Calling Mojang to get UUIDs for remaining unresolved players (this is the slowest step)...");
+            GriefPrevention.addLogEntry("Calling Mojang to get UUIDs for remaining unresolved players (this is the slowest step)...");
             
             for (int i = 0; i * PROFILES_PER_REQUEST < names.size(); i++)
             {
@@ -120,7 +120,7 @@ class UUIDFetcher {
                             //try reducing it
                             if(i == 0 && PROFILES_PER_REQUEST > 1)
                             {
-                                GriefPrevention.AddLogEntry("Batch size " + PROFILES_PER_REQUEST + " seems too large.  Looking for a workable batch size...");
+                                GriefPrevention.addLogEntry("Batch size " + PROFILES_PER_REQUEST + " seems too large.  Looking for a workable batch size...");
                                 PROFILES_PER_REQUEST = Math.max(PROFILES_PER_REQUEST - 5, 1);
                             }
                             
@@ -128,7 +128,7 @@ class UUIDFetcher {
                             //but wait a little while before trying again.
                             else
                             {
-                                GriefPrevention.AddLogEntry("Mojang says we're sending requests too fast.  Will retry every 30 seconds until we succeed...");
+                                GriefPrevention.addLogEntry("Mojang says we're sending requests too fast.  Will retry every 30 seconds until we succeed...");
                                 Thread.sleep(30000);
                             }
                         }
@@ -144,7 +144,7 @@ class UUIDFetcher {
                     String id = (String) jsonProfile.get("id");
                     String name = (String) jsonProfile.get("name");
                     UUID uuid = UUIDFetcher.getUUID(id);
-                    GriefPrevention.AddLogEntry(name + " --> " + uuid.toString());
+                    GriefPrevention.addLogEntry(name + " --> " + uuid.toString());
                     lookupCache.put(name, uuid);
                     lookupCache.put(name.toLowerCase(), uuid);
                 }
@@ -157,13 +157,13 @@ class UUIDFetcher {
         //for offline mode, generate UUIDs for the rest
         else
         {
-            GriefPrevention.AddLogEntry("Generating offline mode UUIDs for remaining unresolved players...");
+            GriefPrevention.addLogEntry("Generating offline mode UUIDs for remaining unresolved players...");
             
             for(int i = 0; i < names.size(); i++)
             {
                 String name = names.get(i);
                 UUID uuid = java.util.UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8));
-                GriefPrevention.AddLogEntry(name + " --> " + uuid.toString());
+                GriefPrevention.addLogEntry(name + " --> " + uuid.toString());
                 lookupCache.put(name, uuid);
                 lookupCache.put(name.toLowerCase(), uuid);
             }

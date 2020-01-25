@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static me.ryanhamshire.griefprevention.GriefPrevention.AddLogEntry;
+import static me.ryanhamshire.griefprevention.GriefPrevention.addLogEntry;
 
 /**
  * @author sarhatabaot
@@ -299,7 +299,7 @@ public class Config {
 		//validate investigation tool
 		config_claims_investigationTool = Material.getMaterial(investigationToolMaterialName);
 		if (config_claims_investigationTool == null) {
-			AddLogEntry("ERROR: Material " + investigationToolMaterialName + " not found.  Defaulting to the stick.  Please update your config.yml.");
+			addLogEntry("ERROR: Material " + investigationToolMaterialName + " not found.  Defaulting to the stick.  Please update your config.yml.");
 			config_claims_investigationTool = Material.STICK;
 		}
 
@@ -312,7 +312,7 @@ public class Config {
 		//validate modification tool
 		config_claims_modificationTool = Material.getMaterial(modificationToolMaterialName);
 		if (config_claims_modificationTool == null) {
-			AddLogEntry("ERROR: Material " + modificationToolMaterialName + " not found.  Defaulting to the golden shovel.  Please update your config.yml.");
+			addLogEntry("ERROR: Material " + modificationToolMaterialName + " not found.  Defaulting to the golden shovel.  Please update your config.yml.");
 			config_claims_modificationTool = Material.GOLDEN_SHOVEL;
 		}
 
@@ -327,7 +327,7 @@ public class Config {
 		for (String worldName : siegeEnabledWorldNames) {
 			World world = plugin.getServer().getWorld(worldName);
 			if (world == null) {
-				AddLogEntry("Error: Siege Configuration: There's no world named \"" + worldName + "\".  Please update your config.yml.");
+				addLogEntry("Error: Siege Configuration: There's no world named \"" + worldName + "\".  Please update your config.yml.");
 			} else {
 				config_siege_enabledWorlds.add(world);
 			}
@@ -388,7 +388,7 @@ public class Config {
 		for (String blockName : breakableBlocksList) {
 			Material material = Material.getMaterial(blockName);
 			if (material == null) {
-				AddLogEntry("Siege Configuration: Material not found: " + blockName + ".");
+				addLogEntry("Siege Configuration: Material not found: " + blockName + ".");
 			} else {
 				config_siege_blocks.add(material);
 			}

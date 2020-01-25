@@ -52,7 +52,7 @@ public class ClaimListCommand extends GPBaseCommand {
 			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.ClaimsListHeader);
 			for (int i = 0; i < playerData.getClaims().size(); i++) {
 				Claim claim = playerData.getClaims().get(i);
-				GriefPrevention.sendMessage(player, TextMode.Instr, GriefPrevention.getfriendlyLocationString(claim.getLesserBoundaryCorner()) + plugin.dataStore.getMessage(Messages.ContinueBlockMath, String.valueOf(claim.getArea())));
+				GriefPrevention.sendMessage(player, TextMode.Instr, GriefPrevention.getFriendlyLocationString(claim.getLesserBoundaryCorner()) + plugin.dataStore.getMessage(Messages.ContinueBlockMath, String.valueOf(claim.getArea())));
 			}
 
 			GriefPrevention.sendMessage(player, TextMode.Instr, Messages.EndBlockMath, String.valueOf(playerData.getRemainingClaimBlocks()));

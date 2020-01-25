@@ -28,7 +28,7 @@ public class SetAccruedClaimBlocksCommand extends GPBaseCommand {
 		plugin.dataStore.savePlayerData(targetPlayer.getUniqueId(), playerData);
 
 		GriefPrevention.sendMessage((Player) player, TextMode.Success, Messages.SetClaimBlocksSuccess);
-		if(player != null) GriefPrevention.AddLogEntry(player.getName() + " set " + targetPlayer.getName() + "'s accrued claim blocks to " + amount + ".", CustomLogEntryTypes.AdminActivity);
+		if(player != null) GriefPrevention.addLogEntry(player.getName() + " set " + targetPlayer.getName() + "'s accrued claim blocks to " + amount + ".", CustomLogEntryTypes.AdminActivity);
 
 	}
 }

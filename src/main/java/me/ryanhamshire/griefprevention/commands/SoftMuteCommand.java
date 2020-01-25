@@ -34,7 +34,7 @@ public class SoftMuteCommand extends GPBaseCommand {
 				executorName = player.getName();
 			}
 
-			GriefPrevention.AddLogEntry(executorName + " muted " + targetPlayer.getName() + ".", CustomLogEntryTypes.AdminActivity, true);
+			GriefPrevention.addLogEntry(executorName + " muted " + targetPlayer.getName() + ".", CustomLogEntryTypes.AdminActivity, true);
 		} else {
 			GriefPrevention.sendMessage(player, TextMode.Success, Messages.UnSoftMuted, targetPlayer.getName());
 		}

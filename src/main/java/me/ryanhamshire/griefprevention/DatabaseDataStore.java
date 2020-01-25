@@ -68,7 +68,7 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(Exception e)
 		{
-			GriefPrevention.AddLogEntry("ERROR: Unable to load Java's mySQL database driver.  Check to make sure you've installed it properly.");
+			GriefPrevention.addLogEntry("ERROR: Unable to load Java's mySQL database driver.  Check to make sure you've installed it properly.");
 			throw e;
 		}
 
@@ -78,7 +78,7 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(Exception e2)
 		{
-			GriefPrevention.AddLogEntry("ERROR: Unable to connect to database.  Check your config file settings.");
+			GriefPrevention.addLogEntry("ERROR: Unable to connect to database.  Check your config file settings.");
 			throw e2;
 		}
 
@@ -110,8 +110,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(Exception e3)
 		{
-			GriefPrevention.AddLogEntry("ERROR: Unable to create the necessary database table.  Details:");
-			GriefPrevention.AddLogEntry(e3.getMessage());
+			GriefPrevention.addLogEntry("ERROR: Unable to create the necessary database table.  Details:");
+			GriefPrevention.addLogEntry(e3.getMessage());
 			e3.printStackTrace();
 			throw e3;
 		}
@@ -195,7 +195,7 @@ public class DatabaseDataStore extends DataStore
 				}
 				catch(Exception e)
 				{
-					GriefPrevention.AddLogEntry("Failed to resolve a batch of names to UUIDs.  Details:" + e.getMessage());
+					GriefPrevention.addLogEntry("Failed to resolve a batch of names to UUIDs.  Details:" + e.getMessage());
 					e.printStackTrace();
 				}
 
@@ -235,15 +235,15 @@ public class DatabaseDataStore extends DataStore
 					}
 					catch(SQLException e)
 					{
-						GriefPrevention.AddLogEntry("Unable to convert player data for " + name + ".  Skipping.");
-						GriefPrevention.AddLogEntry(e.getMessage());
+						GriefPrevention.addLogEntry("Unable to convert player data for " + name + ".  Skipping.");
+						GriefPrevention.addLogEntry(e.getMessage());
 					}
 				}
 			}
 			catch(SQLException e)
 			{
-				GriefPrevention.AddLogEntry("Unable to convert player data.  Details:");
-				GriefPrevention.AddLogEntry(e.getMessage());
+				GriefPrevention.addLogEntry("Unable to convert player data.  Details:");
+				GriefPrevention.addLogEntry(e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -287,7 +287,7 @@ public class DatabaseDataStore extends DataStore
 				{
 					if(e.getMessage() != null && e.getMessage().contains("World not found"))
 					{
-						GriefPrevention.AddLogEntry("Failed to load a claim (ID:" + claimID.toString() + ") because its world isn't loaded (yet?).  Please delete the claim or contact the GriefPrevention developer with information about which plugin(s) you're using to load or create worlds.  " + lesserCornerString);
+						GriefPrevention.addLogEntry("Failed to load a claim (ID:" + claimID.toString() + ") because its world isn't loaded (yet?).  Please delete the claim or contact the GriefPrevention developer with information about which plugin(s) you're using to load or create worlds.  " + lesserCornerString);
 						continue;
 					}
 					else
@@ -310,8 +310,8 @@ public class DatabaseDataStore extends DataStore
 					}
 					catch(Exception ex)
 					{
-						GriefPrevention.AddLogEntry("This owner name did not convert to a UUID: " + ownerName + ".");
-						GriefPrevention.AddLogEntry("  Converted land claim to administrative @ " + lesserBoundaryCorner.toString());
+						GriefPrevention.addLogEntry("This owner name did not convert to a UUID: " + ownerName + ".");
+						GriefPrevention.addLogEntry("  Converted land claim to administrative @ " + lesserBoundaryCorner.toString());
 					}
 				}
 				else
@@ -322,8 +322,8 @@ public class DatabaseDataStore extends DataStore
 					}
 					catch(Exception ex)
 					{
-						GriefPrevention.AddLogEntry("This owner entry is not a UUID: " + ownerName + ".");
-						GriefPrevention.AddLogEntry("  Converted land claim to administrative @ " + lesserBoundaryCorner.toString());
+						GriefPrevention.addLogEntry("This owner entry is not a UUID: " + ownerName + ".");
+						GriefPrevention.addLogEntry("  Converted land claim to administrative @ " + lesserBoundaryCorner.toString());
 					}
 				}
 
@@ -361,7 +361,7 @@ public class DatabaseDataStore extends DataStore
 			}
 			catch(SQLException e)
 			{
-				GriefPrevention.AddLogEntry("Unable to load a claim.  Details: " + e.getMessage() + " ... " + results.toString());
+				GriefPrevention.addLogEntry("Unable to load a claim.  Details: " + e.getMessage() + " ... " + results.toString());
 				e.printStackTrace();
 			}
 		}
@@ -375,7 +375,7 @@ public class DatabaseDataStore extends DataStore
 			if(topLevelClaim == null)
 			{
 				claimsToRemove.add(childClaim);
-				GriefPrevention.AddLogEntry("Removing orphaned claim subdivision: " + childClaim.getLesserBoundaryCorner().toString());
+				GriefPrevention.addLogEntry("Removing orphaned claim subdivision: " + childClaim.getLesserBoundaryCorner().toString());
 				continue;
 			}
 
@@ -415,8 +415,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to save data for claim at " + this.locationToString(claim.lesserBoundaryCorner) + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to save data for claim at " + this.locationToString(claim.lesserBoundaryCorner) + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 		}
 	}
 
@@ -458,8 +458,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to save data for claim at " + this.locationToString(claim.lesserBoundaryCorner) + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to save data for claim at " + this.locationToString(claim.lesserBoundaryCorner) + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 		}
 	}
 
@@ -473,8 +473,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to delete data for claim " + claim.id + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to delete data for claim " + claim.id + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -501,7 +501,7 @@ public class DatabaseDataStore extends DataStore
 		{
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			GriefPrevention.AddLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
 		}
 
 		return playerData;
@@ -538,7 +538,7 @@ public class DatabaseDataStore extends DataStore
 		{
 			StringWriter errors = new StringWriter();
 			e.printStackTrace(new PrintWriter(errors));
-			GriefPrevention.AddLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
+			GriefPrevention.addLogEntry(playerID + " " + errors.toString(), CustomLogEntryTypes.Exception);
 		}
 	}
 
@@ -561,8 +561,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to set next claim ID to " + nextID + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to set next claim ID to " + nextID + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 		}
 	}
 
@@ -586,8 +586,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to save data for group " + groupName + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to save data for group " + groupName + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 		}
 	}
 
@@ -650,8 +650,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to retrieve schema version from database.  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to retrieve schema version from database.  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 			e.printStackTrace();
 			return 0;
 		}
@@ -669,8 +669,8 @@ public class DatabaseDataStore extends DataStore
 		}
 		catch(SQLException e)
 		{
-			GriefPrevention.AddLogEntry("Unable to set next schema version to " + versionToSet + ".  Details:");
-			GriefPrevention.AddLogEntry(e.getMessage());
+			GriefPrevention.addLogEntry("Unable to set next schema version to " + versionToSet + ".  Details:");
+			GriefPrevention.addLogEntry(e.getMessage());
 		}
 	}
 

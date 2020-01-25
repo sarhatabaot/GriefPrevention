@@ -30,6 +30,6 @@ public class DeleteClaimsInWorldCommand extends GPBaseCommand {
 
 		//delete all claims in that world
 		plugin.dataStore.deleteClaimsInWorld(world, true);
-		GriefPrevention.AddLogEntry("Deleted all claims in world: " + world.getName() + ".", CustomLogEntryTypes.AdminActivity);
+		GriefPrevention.addLogEntry("Deleted all claims in world: " + world.getName() + ".", CustomLogEntryTypes.AdminActivity);
 	}
 }

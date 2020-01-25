@@ -25,6 +25,6 @@ public class AdjustBonusClaimBlocksAllCommand extends GPBaseCommand {
 		}
 
 		GriefPrevention.sendMessage((Player) sender, TextMode.Success, Messages.AdjustBlocksAllSuccess, String.valueOf(amount));
-		GriefPrevention.AddLogEntry("Adjusted all " + Bukkit.getOnlinePlayers().size() + "players' bonus claim blocks by " + amount + ".  " + builder.toString(), CustomLogEntryTypes.AdminActivity);
+		GriefPrevention.addLogEntry("Adjusted all " + Bukkit.getOnlinePlayers().size() + "players' bonus claim blocks by " + amount + ".  " + builder.toString(), CustomLogEntryTypes.AdminActivity);
 	}
 }

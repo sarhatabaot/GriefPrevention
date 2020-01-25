@@ -3,6 +3,7 @@ package me.ryanhamshire.griefprevention.commands;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.griefprevention.GriefPrevention;
+import me.ryanhamshire.griefprevention.IgnoreMode;
 import me.ryanhamshire.griefprevention.Messages;
 import me.ryanhamshire.griefprevention.TextMode;
 import org.bukkit.OfflinePlayer;
@@ -30,8 +31,8 @@ public class UnSeparateCommand extends GPBaseCommand {
 			return;
 		}
 
-		plugin.setIgnoreStatus(targetPlayer, targetPlayer2, GriefPrevention.IgnoreMode.NONE);
-		plugin.setIgnoreStatus(targetPlayer2, targetPlayer, GriefPrevention.IgnoreMode.NONE);
+		plugin.setIgnoreStatus(targetPlayer, targetPlayer2, IgnoreMode.NONE);
+		plugin.setIgnoreStatus(targetPlayer2, targetPlayer, IgnoreMode.NONE);
 
 		GriefPrevention.sendMessage(player, TextMode.Success, Messages.UnSeparateConfirmation);
 
