@@ -16,10 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.restore;
 
 import java.util.ArrayList;
 
+import me.ryanhamshire.griefprevention.GriefPrevention;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;

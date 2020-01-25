@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.restore;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,14 +24,12 @@ import org.bukkit.block.data.BlockData;
 
 //basically, just a few data points from a block conveniently encapsulated in a class
 //this is used only by the RestoreNature code
-public class BlockSnapshot 
-{
+public class BlockSnapshot {
 	public Location location;
 	public Material typeId;
-	public BlockData data;	
-	
-	public BlockSnapshot(Location location, Material typeId, BlockData data)
-	{
+	public BlockData data;
+
+	public BlockSnapshot(Location location, Material typeId, BlockData data) {
 		this.location = location;
 		this.typeId = typeId;
 		this.data = data;
