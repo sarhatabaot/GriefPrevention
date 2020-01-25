@@ -15,15 +15,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package me.ryanhamshire.griefprevention;
+
+package me.ryanhamshire.griefprevention;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 //FEATURE: automatically remove claims owned by inactive players which:
 //...aren't protecting much OR
@@ -31,34 +33,31 @@ import org.bukkit.Bukkit;
 //...because the player has been gone a REALLY long time, and that expiration has been configured in config.yml
 
 //runs every 1 minute in the main thread
-class FindUnusedClaimsTask implements Runnable 
-{
+public class FindUnusedClaimsTask implements Runnable {
 	private Set<UUID> claimOwnerUUIDs = new HashSet<>();
 	private Iterator<UUID> claimOwnerIterator;
-	
-	FindUnusedClaimsTask()
-	{
+	private JavaPlugin plugin;
+
+	public FindUnusedClaimsTask(JavaPlugin plugin) {
 		refreshUUIDs();
+		this.plugin = plugin;
 	}
-	
+
 	@Override
-	public void run()
-	{
+	public void run() {
 		//don't do anything when there are no claims
-		if(claimOwnerUUIDs.isEmpty()) return;
+		if (claimOwnerUUIDs.isEmpty()) return;
 
 		//wrap search around to beginning
-		if(!claimOwnerIterator.hasNext())
-		{
+		if (!claimOwnerIterator.hasNext()) {
 			refreshUUIDs();
 			return;
 		}
-		
-		Bukkit.getScheduler().runTaskAsynchronously(GriefPrevention.instance, new CleanupUnusedClaimPreTask(claimOwnerIterator.next()));
+
+		new CleanupUnusedClaimPreTask(claimOwnerIterator.next()).runTaskAsynchronously(plugin);
 	}
 
-	public void refreshUUIDs()
-	{
+	public void refreshUUIDs() {
 		claimOwnerUUIDs.clear();
 		for (Claim claim : GriefPrevention.instance.dataStore.claims)
 			claimOwnerUUIDs.add(claim.ownerID);

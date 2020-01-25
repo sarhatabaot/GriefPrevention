@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import me.ryanhamshire.griefprevention.claim.Claim;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.visualization.Visualization;
 import me.ryanhamshire.griefprevention.visualization.VisualizationType;
@@ -446,7 +447,7 @@ public class BlockEventHandler implements Listener
 	    return isActiveBlock(block.getType());
 	}
 	
-	static boolean isActiveBlock(BlockState state)
+	public static boolean isActiveBlock(BlockState state)
 	{
 	    return isActiveBlock(state.getType());
 	}
