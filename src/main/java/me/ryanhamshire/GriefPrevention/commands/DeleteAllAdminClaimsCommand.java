@@ -2,6 +2,7 @@ package me.ryanhamshire.GriefPrevention.commands;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,7 @@ public class DeleteAllAdminClaimsCommand extends GPBaseCommand{
 		super(plugin);
 	}
 
+	@Default
 	public void onDeleteAllClaims(final Player player){
 		//delete all admin claims
 		plugin.dataStore.deleteClaimsForPlayer(null, true);  //null for owner id indicates an administrative claim
