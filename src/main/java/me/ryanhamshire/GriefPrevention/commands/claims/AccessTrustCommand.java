@@ -1,12 +1,15 @@
-package me.ryanhamshire.GriefPrevention.commands;
+package me.ryanhamshire.GriefPrevention.commands.claims;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.ClaimPermission;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import me.ryanhamshire.GriefPrevention.commands.GPBaseCommand;
 import org.bukkit.entity.Player;
 
 @CommandAlias("accesstrust")
+@CommandPermission("griefprevention.claims")
 public class AccessTrustCommand extends GPBaseCommand {
 
 	public AccessTrustCommand(final GriefPrevention plugin) {

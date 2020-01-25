@@ -1,15 +1,15 @@
-package me.ryanhamshire.GriefPrevention.commands;
+package me.ryanhamshire.GriefPrevention.commands.claims;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.commands.GPBaseCommand;
 import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.entity.Player;
 
-/**
- * @author sarhatabaot
- */
 @CommandAlias("abandonallclaims")
+@CommandPermission("griefprevention.claims")
 public class AbandonAllClaimsCommand extends GPBaseCommand {
 	public AbandonAllClaimsCommand(final GriefPrevention plugin) {
 		super(plugin);

@@ -1,14 +1,17 @@
-package me.ryanhamshire.GriefPrevention.commands;
+package me.ryanhamshire.GriefPrevention.commands.claims;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.commands.GPBaseCommand;
 import me.ryanhamshire.GriefPrevention.events.TrustChangedEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 @CommandAlias("untrust")
+@CommandPermission("griefprevention.claims")
 public class UnTrustCommand extends GPBaseCommand {
 	public UnTrustCommand(final GriefPrevention plugin) {
 		super(plugin);
