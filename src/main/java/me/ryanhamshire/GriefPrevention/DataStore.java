@@ -19,6 +19,7 @@
 package me.ryanhamshire.GriefPrevention;
 
 import com.google.common.io.Files;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.ClaimCreatedEvent;
 import me.ryanhamshire.GriefPrevention.events.ClaimDeletedEvent;
 import me.ryanhamshire.GriefPrevention.events.ClaimModifiedEvent;
@@ -807,8 +808,8 @@ public abstract class DataStore
 		
 		int smallx, bigx, smally, bigy, smallz, bigz;
 		
-		if(y1 < GriefPrevention.instance.config_claims_maxDepth) y1 = GriefPrevention.instance.config_claims_maxDepth;
-		if(y2 < GriefPrevention.instance.config_claims_maxDepth) y2 = GriefPrevention.instance.config_claims_maxDepth;
+		if(y1 < Config.config_claims_maxDepth) y1 = Config.config_claims_maxDepth;
+		if(y2 < Config.config_claims_maxDepth) y2 = Config.config_claims_maxDepth;
 
 		//determine small versus big inputs
 		if(x1 < x2)
@@ -857,7 +858,7 @@ public abstract class DataStore
 		}
 		
 		//creative mode claims always go to bedrock
-		if(GriefPrevention.instance.config_claims_worldModes.get(world) == ClaimsMode.Creative)
+		if(Config.config_claims_worldModes.get(world) == ClaimsMode.Creative)
 		{
 			smally = 0;
 		}
@@ -901,7 +902,7 @@ public abstract class DataStore
 		}
 		
 		//if worldguard is installed, also prevent claims from overlapping any worldguard regions
-		if(GriefPrevention.instance.config_claims_respectWorldGuard && this.worldGuard != null && creatingPlayer != null)
+		if(Config.config_claims_respectWorldGuard && this.worldGuard != null && creatingPlayer != null)
 		{
 		    if(!this.worldGuard.canBuild(newClaim.lesserBoundaryCorner, newClaim.greaterBoundaryCorner, creatingPlayer))
 		    {
@@ -996,7 +997,7 @@ public abstract class DataStore
 	//respects the max depth config variable
 	synchronized public void extendClaim(Claim claim, int newDepth) 
 	{
-		if(newDepth < GriefPrevention.instance.config_claims_maxDepth) newDepth = GriefPrevention.instance.config_claims_maxDepth;
+		if(newDepth < Config.config_claims_maxDepth) newDepth = Config.config_claims_maxDepth;
 		
 		if(claim.parent != null) claim = claim.parent;
 		
@@ -1080,7 +1081,7 @@ public abstract class DataStore
 
 		//start a cooldown for this attacker/defender pair
 		Long now = Calendar.getInstance().getTimeInMillis();
-		Long cooldownEnd = now + 1000 * 60 * GriefPrevention.instance.config_siege_cooldownEndInMinutes;  //one hour from now
+		Long cooldownEnd = now + 1000 * 60 * Config.config_siege_cooldownEndInMinutes;  //one hour from now
 		this.siegeCooldownRemaining.put(siegeData.attacker.getName() + "_" + siegeData.defender.getName(), cooldownEnd);
 		
 		//start cooldowns for every attacker/involved claim pair
@@ -1120,7 +1121,7 @@ public abstract class DataStore
 				SecureClaimTask task = new SecureClaimTask(siegeData);
 
 				GriefPrevention.instance.getServer().getScheduler().scheduleSyncDelayedTask(
-                                        GriefPrevention.instance, task, 20L * GriefPrevention.instance.config_siege_doorsOpenSeconds
+                                        GriefPrevention.instance, task, 20L * Config.config_siege_doorsOpenSeconds
                                 );
 			}
 		}
@@ -1294,16 +1295,16 @@ public abstract class DataStore
                     
             if(!player.hasPermission("griefprevention.adminclaims") && !playerData.claimResizing.isAdminClaim() && smaller)
             {
-                if(newWidth < GriefPrevention.instance.config_claims_minWidth || newHeight < GriefPrevention.instance.config_claims_minWidth)
+                if(newWidth < Config.config_claims_minWidth || newHeight < Config.config_claims_minWidth)
                 {
-                    GriefPrevention.sendMessage(player, TextMode.Err, Messages.ResizeClaimTooNarrow, String.valueOf(GriefPrevention.instance.config_claims_minWidth));
+                    GriefPrevention.sendMessage(player, TextMode.Err, Messages.ResizeClaimTooNarrow, String.valueOf(Config.config_claims_minWidth));
                     return;
                 }
                 
                 int newArea = newWidth * newHeight;
-                if(newArea < GriefPrevention.instance.config_claims_minArea)
+                if(newArea < Config.config_claims_minArea)
                 {
-                    GriefPrevention.sendMessage(player, TextMode.Err, Messages.ResizeClaimInsufficientArea, String.valueOf(GriefPrevention.instance.config_claims_minArea));
+                    GriefPrevention.sendMessage(player, TextMode.Err, Messages.ResizeClaimInsufficientArea, String.valueOf(Config.config_claims_minArea));
                     return;
                 }
             }

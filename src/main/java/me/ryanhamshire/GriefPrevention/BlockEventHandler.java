@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -119,7 +120,7 @@ public class BlockEventHandler implements Listener
 	public void onSignChanged(SignChangeEvent event)
 	{
 	    //send sign content to online administrators
-	    if(!GriefPrevention.instance.config_signNotifications) return;
+	    if(!Config.config_signNotifications) return;
 	    
 	    Player player = event.getPlayer();
 		if(player == null) return;
@@ -194,9 +195,9 @@ public class BlockEventHandler implements Listener
 	
 	private boolean doesAllowFireProximityInWorld(World world) {
 		if (GriefPrevention.instance.pvpRulesApply(world)) {
-			return GriefPrevention.instance.config_pvp_allowFireNearPlayers;
+			return Config.config_pvp_allowFireNearPlayers;
 		} else {
-			return GriefPrevention.instance.config_pvp_allowFireNearPlayers_NonPvp;
+			return Config.config_pvp_allowFireNearPlayers_NonPvp;
 		}
 	}
 	
@@ -280,7 +281,7 @@ public class BlockEventHandler implements Listener
 			if(block.getY() <= claim.lesserBoundaryCorner.getBlockY() && claim.allowBuild(player, block.getType()) == null)
 			{
 				//extend the claim downward
-				this.dataStore.extendClaim(claim, block.getY() - GriefPrevention.instance.config_claims_claimsExtendIntoGroundDistance);
+				this.dataStore.extendClaim(claim, block.getY() - Config.config_claims_claimsExtendIntoGroundDistance);
 			}
 			
 			//allow for a build warning in the future 
@@ -290,22 +291,22 @@ public class BlockEventHandler implements Listener
 		//FEATURE: automatically create a claim when a player who has no claims places a chest
 		
 		//otherwise if there's no claim, the player is placing a chest, and new player automatic claims are enabled
-		else if(GriefPrevention.instance.config_claims_automaticClaimsForNewPlayersRadius > -1 && player.hasPermission("griefprevention.createclaims") && block.getType() == Material.CHEST)
+		else if(Config.config_claims_automaticClaimsForNewPlayersRadius > -1 && player.hasPermission("griefprevention.createclaims") && block.getType() == Material.CHEST)
 		{			
 			//if the chest is too deep underground, don't create the claim and explain why
-			if(GriefPrevention.instance.config_claims_preventTheft && block.getY() < GriefPrevention.instance.config_claims_maxDepth)
+			if(Config.config_claims_preventTheft && block.getY() < Config.config_claims_maxDepth)
 			{
 				GriefPrevention.sendMessage(player, TextMode.Warn, Messages.TooDeepToClaim);
 				return;
 			}
 			
-			int radius = GriefPrevention.instance.config_claims_automaticClaimsForNewPlayersRadius;
+			int radius = Config.config_claims_automaticClaimsForNewPlayersRadius;
 			
 			//if the player doesn't have any claims yet, automatically create a claim centered at the chest
 			if(playerData.getClaims().size() == 0)
 			{
 				//radius == 0 means protect ONLY the chest
-				if(GriefPrevention.instance.config_claims_automaticClaimsForNewPlayersRadius == 0)
+				if(Config.config_claims_automaticClaimsForNewPlayersRadius == 0)
 				{					
 					this.dataStore.createClaim(block.getWorld(), block.getX(), block.getX(), block.getY(), block.getY(), block.getZ(), block.getZ(), player.getUniqueId(), null, null, player);
 					GriefPrevention.sendMessage(player, TextMode.Success, Messages.ChestClaimConfirmation);					
@@ -332,7 +333,7 @@ public class BlockEventHandler implements Listener
 			                result = this.dataStore.createClaim(
 		                        block.getWorld(), 
 	                            block.getX() - radius, block.getX() + radius, 
-	                            block.getY() - GriefPrevention.instance.config_claims_claimsExtendIntoGroundDistance, block.getY(), 
+	                            block.getY() - Config.config_claims_claimsExtendIntoGroundDistance, block.getY(),
 	                            block.getZ() - radius, block.getZ() + radius, 
 	                            player.getUniqueId(), 
 	                            null, null,
@@ -359,14 +360,14 @@ public class BlockEventHandler implements Listener
 			}
 			
 			//check to see if this chest is in a claim, and warn when it isn't
-			if(GriefPrevention.instance.config_claims_preventTheft && this.dataStore.getClaimAt(block.getLocation(), false, playerData.lastClaim) == null)
+			if(Config.config_claims_preventTheft && this.dataStore.getClaimAt(block.getLocation(), false, playerData.lastClaim) == null)
 			{
 				GriefPrevention.sendMessage(player, TextMode.Warn, Messages.UnprotectedChestWarning);				
 			}
 		}
 		
 		//FEATURE: limit wilderness tree planting to grass, or dirt with more blocks beneath it
-		else if(Tag.SAPLINGS.isTagged(block.getType()) && GriefPrevention.instance.config_blockSkyTrees && GriefPrevention.instance.claimsEnabledForWorld(player.getWorld()))
+		else if(Tag.SAPLINGS.isTagged(block.getType()) && Config.config_blockSkyTrees && GriefPrevention.instance.claimsEnabledForWorld(player.getWorld()))
 		{
 			Block earthBlock = placeEvent.getBlockAgainst();
 			if(earthBlock.getType() != Material.GRASS)
@@ -411,7 +412,7 @@ public class BlockEventHandler implements Listener
 		}
 		
 		//warn players when they place TNT above sea level, since it doesn't destroy blocks there
-		if(	GriefPrevention.instance.config_blockSurfaceOtherExplosions && block.getType() == Material.TNT &&
+		if(Config.config_blockSurfaceOtherExplosions && block.getType() == Material.TNT &&
 			block.getWorld().getEnvironment() != Environment.NETHER &&
 			block.getY() > GriefPrevention.instance.getSeaLevel(block.getWorld()) - 5 &&
 			claim == null &&
@@ -421,7 +422,7 @@ public class BlockEventHandler implements Listener
 		}
 		
 		//warn players about disabled pistons outside of land claims
-		if( GriefPrevention.instance.config_pistonsInClaimsOnly && 
+		if(Config.config_pistonsInClaimsOnly &&
 	        (block.getType() == Material.PISTON || block.getType() == Material.STICKY_PISTON) &&
 	        claim == null )
 		{
@@ -462,7 +463,7 @@ public class BlockEventHandler implements Listener
 	public void onBlockPistonExtend (BlockPistonExtendEvent event)
 	{		
 	    //return if piston checks are not enabled
-	    if(!GriefPrevention.instance.config_checkPistonMovement) return;
+	    if(!Config.config_checkPistonMovement) return;
 	    
 	    //pushing down is ALWAYS safe
 	    if(event.getDirection() == BlockFace.DOWN) return;
@@ -497,7 +498,7 @@ public class BlockEventHandler implements Listener
 		if(claim != null) pistonClaimOwnerName = claim.getOwnerName();
 		
 		//if pistons are limited to same-claim block movement
-		if(GriefPrevention.instance.config_pistonsInClaimsOnly)
+		if(Config.config_pistonsInClaimsOnly)
 		{
 		    //if piston is not in a land claim, cancel event
 		    if(claim == null)
@@ -587,7 +588,7 @@ public class BlockEventHandler implements Listener
 	public void onBlockPistonRetract (BlockPistonRetractEvent event)
 	{
 	    //return if piston checks are not enabled
-        if(!GriefPrevention.instance.config_checkPistonMovement) return;
+        if(!Config.config_checkPistonMovement) return;
         
 	    //pulling up is always safe
 		if(event.getDirection() == BlockFace.UP) return;
@@ -598,7 +599,7 @@ public class BlockEventHandler implements Listener
             if(!GriefPrevention.instance.claimsEnabledForWorld(event.getBlock().getWorld())) return;
     		
     		//if pistons limited to only pulling blocks which are in the same claim the piston is in
-    		if(GriefPrevention.instance.config_pistonsInClaimsOnly)
+    		if(Config.config_pistonsInClaimsOnly)
     		{
     		    //if piston not in a land claim, cancel event
     		    Claim pistonClaim = this.dataStore.getClaimAt(event.getBlock().getLocation(), false, null);
@@ -668,7 +669,7 @@ public class BlockEventHandler implements Listener
 //			}
         }
 	    
-	    if(!GriefPrevention.instance.config_fireSpreads && igniteEvent.getCause() != IgniteCause.FLINT_AND_STEEL &&  igniteEvent.getCause() != IgniteCause.LIGHTNING)
+	    if(!Config.config_fireSpreads && igniteEvent.getCause() != IgniteCause.FLINT_AND_STEEL &&  igniteEvent.getCause() != IgniteCause.LIGHTNING)
 		{	
 			igniteEvent.setCancelled(true);			
 		}
@@ -683,7 +684,7 @@ public class BlockEventHandler implements Listener
 		//don't track in worlds where claims are not enabled
         if(!GriefPrevention.instance.claimsEnabledForWorld(spreadEvent.getBlock().getWorld())) return;
         
-		if(!GriefPrevention.instance.config_fireSpreads)
+		if(!Config.config_fireSpreads)
 		{
 			spreadEvent.setCancelled(true);
 			
@@ -699,7 +700,7 @@ public class BlockEventHandler implements Listener
 		//never spread into a claimed area, regardless of settings
 		if(this.dataStore.getClaimAt(spreadEvent.getBlock().getLocation(), false, null) != null)
 		{
-			if(GriefPrevention.instance.config_claims_firespreads) return;
+			if(Config.config_claims_firespreads) return;
 			spreadEvent.setCancelled(true);
 			
 			//if the source of the spread is not fire on netherrack, put out that source fire to save cpu cycles
@@ -718,7 +719,7 @@ public class BlockEventHandler implements Listener
 		//don't track in worlds where claims are not enabled
 		if(!GriefPrevention.instance.claimsEnabledForWorld(burnEvent.getBlock().getWorld())) return;
         
-		if(!GriefPrevention.instance.config_fireDestroys)
+		if(!Config.config_fireDestroys)
 		{
 			burnEvent.setCancelled(true);
 			Block block = burnEvent.getBlock();
@@ -753,7 +754,7 @@ public class BlockEventHandler implements Listener
 		//never burn claimed blocks, regardless of settings
 		if(this.dataStore.getClaimAt(burnEvent.getBlock().getLocation(), false, null) != null)
 		{
-			if(GriefPrevention.instance.config_claims_firedamages) return;
+			if(Config.config_claims_firedamages) return;
 			burnEvent.setCancelled(true);
 		}
 	}
@@ -896,7 +897,7 @@ public class BlockEventHandler implements Listener
     public void onTreeGrow (StructureGrowEvent growEvent)
     {
         //only take these potentially expensive steps if configured to do so
-	    if(!GriefPrevention.instance.config_limitTreeGrowth) return;
+	    if(!Config.config_limitTreeGrowth) return;
 	    
 	    //don't track in worlds where claims are not enabled
         if(!GriefPrevention.instance.claimsEnabledForWorld(growEvent.getWorld())) return;

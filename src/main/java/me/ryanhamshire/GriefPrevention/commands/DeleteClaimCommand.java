@@ -3,6 +3,7 @@ package me.ryanhamshire.GriefPrevention.commands;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.entity.Player;
 
 @CommandAlias("deleteclaim")
@@ -32,7 +33,7 @@ public class DeleteClaimCommand extends GPBaseCommand {
 				plugin.dataStore.deleteClaim(claim, true, true);
 
 				//if in a creative mode world, /restorenature the claim
-				if (GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner()) || GriefPrevention.instance.config_claims_survivalAutoNatureRestoration) {
+				if (GriefPrevention.instance.creativeRulesApply(claim.getLesserBoundaryCorner()) || Config.config_claims_survivalAutoNatureRestoration) {
 					GriefPrevention.instance.restoreClaim(claim, 0);
 				}
 

@@ -4,6 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -16,9 +17,9 @@ public class ClaimCommand extends GPBaseCommand {
 	}
 
 	private boolean isClaimLimit(final Player player, final PlayerData playerData) {
-		return GriefPrevention.instance.config_claims_maxClaimsPerPlayer > 0 &&
+		return Config.config_claims_maxClaimsPerPlayer > 0 &&
 				!player.hasPermission("griefprevention.overrideclaimcountlimit") &&
-				playerData.getClaims().size() >= GriefPrevention.instance.config_claims_maxClaimsPerPlayer;
+				playerData.getClaims().size() >= Config.config_claims_maxClaimsPerPlayer;
 	}
 
 	@Default
@@ -36,23 +37,23 @@ public class ClaimCommand extends GPBaseCommand {
 		}
 
 		//default is chest claim radius, unless -1
-		int radius = GriefPrevention.instance.config_claims_automaticClaimsForNewPlayersRadius;
-		if (radius < 0) radius = (int) Math.ceil(Math.sqrt(GriefPrevention.instance.config_claims_minArea) / 2);
+		int radius = Config.config_claims_automaticClaimsForNewPlayersRadius;
+		if (radius < 0) radius = (int) Math.ceil(Math.sqrt(Config.config_claims_minArea) / 2);
 
 		//if player has any claims, respect claim minimum size setting
 		if (playerData.getClaims().size() > 0) {
 			//if player has exactly one land claim, this requires the claim modification tool to be in hand (or creative mode player)
-			if (playerData.getClaims().size() == 1 && player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != GriefPrevention.instance.config_claims_modificationTool) {
+			if (playerData.getClaims().size() == 1 && player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != Config.config_claims_modificationTool) {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.MustHoldModificationToolForThat);
 				return;
 			}
 
-			radius = (int) Math.ceil(Math.sqrt(GriefPrevention.instance.config_claims_minArea) / 2);
+			radius = (int) Math.ceil(Math.sqrt(Config.config_claims_minArea) / 2);
 		}
 
 		//allow for specifying the radius
 		if (getOrigArgs().length > 0) {
-			if (playerData.getClaims().size() < 2 && player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != GriefPrevention.instance.config_claims_modificationTool) {
+			if (playerData.getClaims().size() < 2 && player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != Config.config_claims_modificationTool) {
 				GriefPrevention.sendMessage(player, TextMode.Err, Messages.RadiusRequiresGoldenShovel);
 				return;
 			}
@@ -88,8 +89,8 @@ public class ClaimCommand extends GPBaseCommand {
 
 		CreateClaimResult result = plugin.dataStore.createClaim(lc.getWorld(),
 				lc.getBlockX(), gc.getBlockX(),
-				lc.getBlockY() - GriefPrevention.instance.config_claims_claimsExtendIntoGroundDistance - 1,
-				gc.getWorld().getHighestBlockYAt(gc) - GriefPrevention.instance.config_claims_claimsExtendIntoGroundDistance - 1,
+				lc.getBlockY() - Config.config_claims_claimsExtendIntoGroundDistance - 1,
+				gc.getWorld().getHighestBlockYAt(gc) - Config.config_claims_claimsExtendIntoGroundDistance - 1,
 				lc.getBlockZ(), gc.getBlockZ(),
 				player.getUniqueId(), null, null, player);
 		if (!result.succeeded) {

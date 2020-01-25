@@ -2,6 +2,7 @@ package me.ryanhamshire.GriefPrevention;
 
 import java.util.ArrayList;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
@@ -107,7 +108,7 @@ class AutoExtendClaimTask implements Runnable
 
     private boolean yTooSmall(int y)
     {
-        return y == 0 || y <= GriefPrevention.instance.config_claims_maxDepth;
+        return y == 0 || y <= Config.config_claims_maxDepth;
     }
     
     //runs in the main execution thread, where it can safely change claims and save those changes

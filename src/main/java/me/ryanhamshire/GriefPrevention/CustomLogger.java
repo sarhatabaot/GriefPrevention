@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import com.google.common.io.Files;
@@ -50,7 +51,7 @@ class CustomLogger
         this.DeleteExpiredLogs();
         
         //unless disabled, schedule recurring tasks
-        int daysToKeepLogs = GriefPrevention.instance.config_logs_daysToKeep;
+        int daysToKeepLogs = Config.config_logs_daysToKeep;
         if(daysToKeepLogs > 0)
         {
             BukkitScheduler scheduler = GriefPrevention.instance.getServer().getScheduler();
@@ -65,7 +66,7 @@ class CustomLogger
     void AddEntry(String entry, CustomLogEntryTypes entryType)
     {
         //if disabled, do nothing
-        int daysToKeepLogs = GriefPrevention.instance.config_logs_daysToKeep;
+        int daysToKeepLogs = Config.config_logs_daysToKeep;
         if(daysToKeepLogs == 0) return;
         
         //if entry type is not enabled, do nothing
@@ -81,11 +82,11 @@ class CustomLogger
     private boolean isEnabledType(CustomLogEntryTypes entryType)
     {
         if(entryType == CustomLogEntryTypes.Exception) return true;
-        if(entryType == CustomLogEntryTypes.SocialActivity && !GriefPrevention.instance.config_logs_socialEnabled) return false;
-        if(entryType == CustomLogEntryTypes.SuspiciousActivity && !GriefPrevention.instance.config_logs_suspiciousEnabled) return false;
-        if(entryType == CustomLogEntryTypes.AdminActivity && !GriefPrevention.instance.config_logs_adminEnabled) return false;
-        if(entryType == CustomLogEntryTypes.Debug && !GriefPrevention.instance.config_logs_debugEnabled) return false;
-        if(entryType == CustomLogEntryTypes.MutedChat && !GriefPrevention.instance.config_logs_mutedChatEnabled) return false;
+        if(entryType == CustomLogEntryTypes.SocialActivity && !Config.config_logs_socialEnabled) return false;
+        if(entryType == CustomLogEntryTypes.SuspiciousActivity && !Config.config_logs_suspiciousEnabled) return false;
+        if(entryType == CustomLogEntryTypes.AdminActivity && !Config.config_logs_adminEnabled) return false;
+        if(entryType == CustomLogEntryTypes.Debug && !Config.config_logs_debugEnabled) return false;
+        if(entryType == CustomLogEntryTypes.MutedChat && !Config.config_logs_mutedChatEnabled) return false;
         
         return true;
     }
@@ -124,7 +125,7 @@ class CustomLogger
             File [] files = logFolder.listFiles(); 
             
             //delete any created before x days ago
-            int daysToKeepLogs = GriefPrevention.instance.config_logs_daysToKeep;
+            int daysToKeepLogs = Config.config_logs_daysToKeep;
             Calendar expirationBoundary = Calendar.getInstance();
             expirationBoundary.add(Calendar.DATE, -daysToKeepLogs);
             for(int i = 0; i < files.length; i++)

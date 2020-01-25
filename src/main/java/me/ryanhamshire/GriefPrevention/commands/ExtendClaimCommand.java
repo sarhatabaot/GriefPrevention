@@ -4,6 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class ExtendClaimCommand extends GPBaseCommand {
 		}
 
 		//requires claim modification tool in hand
-		if (player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != GriefPrevention.instance.config_claims_modificationTool) {
+		if (player.getGameMode() != GameMode.CREATIVE && player.getItemInHand().getType() != Config.config_claims_modificationTool) {
 			GriefPrevention.sendMessage(player, TextMode.Err, Messages.MustHoldModificationToolForThat);
 			return;
 		}

@@ -21,6 +21,7 @@ package me.ryanhamshire.GriefPrevention;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Boat;
@@ -45,76 +46,60 @@ class EntityCleanupTask implements Runnable
 	@Override
 	public void run() 
 	{
-		ArrayList<World> worlds = new ArrayList<World>();
+		ArrayList<World> worlds = new ArrayList<>();
 		for(World world : GriefPrevention.instance.getServer().getWorlds())
 	    {
-		    if(GriefPrevention.instance.config_claims_worldModes.get(world) == ClaimsMode.Creative)
+		    if(Config.config_claims_worldModes.get(world) == ClaimsMode.Creative)
 		    {
 		        worlds.add(world);
 		    }
 	    }
-		
-		for(int i = 0; i < worlds.size(); i++)
-		{
-			World world = worlds.get(i);
-			
+
+		for (World world : worlds) {
 			List<Entity> entities = world.getEntities();
-			
+
 			//starting and stopping point.  each execution of the task scans 10% of the server's (loaded) entities
-			int j = (int)(entities.size() * this.percentageStart);
-			int k = (int)(entities.size() * (this.percentageStart + .1));
+			int j = (int) (entities.size() * this.percentageStart);
+			int k = (int) (entities.size() * (this.percentageStart + .1));
 			Claim cachedClaim = null;
-			for(; j < entities.size() && j < k; j++)
-			{
+			for (; j < entities.size() && j < k; j++) {
 				Entity entity = entities.get(j);
-				
+
 				boolean remove = false;
-				if(entity instanceof Boat) //boats must be occupied
+				if (entity instanceof Boat) //boats must be occupied
 				{
-					Boat boat = (Boat)entity;
-					if(boat.isEmpty()) remove = true;
-				}
-				
-				else if(entity instanceof Vehicle)
-				{
-					Vehicle vehicle = (Vehicle)entity;
-					
+					Boat boat = (Boat) entity;
+					if (boat.isEmpty()) remove = true;
+				} else if (entity instanceof Vehicle) {
+					Vehicle vehicle = (Vehicle) entity;
+
 					//minecarts in motion must be occupied by a player
-					if(vehicle.getVelocity().lengthSquared() != 0)
-					{
-						if(vehicle.isEmpty() || !(vehicle.getPassenger() instanceof Player))
-						{
+					if (vehicle.getVelocity().lengthSquared() != 0) {
+						if (vehicle.isEmpty() || !(vehicle.getPassenger() instanceof Player)) {
 							remove = true;
 						}
 					}
-					
+
 					//stationary carts must be on rails
-					else
-					{
+					else {
 						Material material = world.getBlockAt(vehicle.getLocation()).getType();
-						if(material != Material.RAIL && material != Material.POWERED_RAIL && material != Material.DETECTOR_RAIL)
-						{
+						if (material != Material.RAIL && material != Material.POWERED_RAIL && material != Material.DETECTOR_RAIL) {
 							remove = true;
 						}
 					}
 				}
-				
+
 				//all non-player entities must be in claims
-				else if(!(entity instanceof Player))
-				{
+				else if (!(entity instanceof Player)) {
 					Claim claim = GriefPrevention.instance.dataStore.getClaimAt(entity.getLocation(), false, cachedClaim);
-					if(claim != null)
-					{
+					if (claim != null) {
 						cachedClaim = claim;
-					}
-					else
-					{
+					} else {
 						remove = true;
 					}
 				}
-				
-				if(remove)
-				{
+
+				if (remove) {
 					GriefPrevention.AddLogEntry("Removing entity " + entity.getType().name() + " @ " + entity.getLocation(), CustomLogEntryTypes.Debug);
 					entity.remove();
 				}

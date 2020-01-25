@@ -1,5 +1,6 @@
 package me.ryanhamshire.GriefPrevention;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class WelcomeTask implements Runnable
         GriefPrevention.sendMessage(player, TextMode.Instr, Messages.SurvivalBasicsVideo2, DataStore.SURVIVAL_VIDEO_URL);
         
         //give the player a reference book for later
-        if(GriefPrevention.instance.config_claims_supplyPlayerManual)
+        if(Config.config_claims_supplyPlayerManual)
         {
             ItemFactory factory = Bukkit.getItemFactory();
             BookMeta meta = (BookMeta) factory.getItemMeta(Material.WRITTEN_BOOK);
@@ -42,11 +43,11 @@ public class WelcomeTask implements Runnable
             
             page1.append(URL).append("\n\n");
             page1.append(intro).append("\n\n");
-            String editToolName = GriefPrevention.instance.config_claims_modificationTool.name().replace('_', ' ').toLowerCase();
-            String infoToolName = GriefPrevention.instance.config_claims_investigationTool.name().replace('_', ' ').toLowerCase();
+            String editToolName = Config.config_claims_modificationTool.name().replace('_', ' ').toLowerCase();
+            String infoToolName = Config.config_claims_investigationTool.name().replace('_', ' ').toLowerCase();
             String configClaimTools = datastore.getMessage(Messages.BookTools, editToolName, infoToolName);
             page1.append(configClaimTools);
-            if(GriefPrevention.instance.config_claims_automaticClaimsForNewPlayersRadius < 0)
+            if(Config.config_claims_automaticClaimsForNewPlayersRadius < 0)
             {
                 page1.append(datastore.getMessage(Messages.BookDisabledChestClaims));
             }

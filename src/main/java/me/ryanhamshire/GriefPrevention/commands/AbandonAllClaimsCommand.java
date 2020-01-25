@@ -3,6 +3,7 @@ package me.ryanhamshire.GriefPrevention.commands;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.entity.Player;
 
 /**
@@ -27,11 +28,11 @@ public class AbandonAllClaimsCommand extends GPBaseCommand {
 			return;
 		}
 
-		if (plugin.config_claims_abandonReturnRatio != 1.0D) {
+		if (Config.config_claims_abandonReturnRatio != 1.0D) {
 			//adjust claim blocks
 			for(Claim claim : playerData.getClaims())
 			{
-				playerData.setAccruedClaimBlocks(playerData.getAccruedClaimBlocks() - (int)Math.ceil((claim.getArea() * (1 - plugin.config_claims_abandonReturnRatio))));
+				playerData.setAccruedClaimBlocks(playerData.getAccruedClaimBlocks() - (int)Math.ceil((claim.getArea() * (1 - Config.config_claims_abandonReturnRatio))));
 			}
 		}
 

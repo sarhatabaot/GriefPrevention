@@ -3,6 +3,7 @@ package me.ryanhamshire.GriefPrevention.commands;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.*;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import me.ryanhamshire.GriefPrevention.events.SaveTrappedPlayerEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -44,7 +45,7 @@ public class TrappedCommand extends GPBaseCommand {
 		}
 
 		//if the player is in an administrative claim and AllowTrappedInAdminClaims is false, he should contact an admin
-		if(!GriefPrevention.instance.config_claims_allowTrappedInAdminClaims && claim.isAdminClaim() && event.getDestination() == null) {
+		if(!Config.config_claims_allowTrappedInAdminClaims && claim.isAdminClaim() && event.getDestination() == null) {
 			GriefPrevention.sendMessage(player, TextMode.Err, Messages.TrappedWontWorkHere);
 			return;
 		}

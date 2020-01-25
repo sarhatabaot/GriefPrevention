@@ -30,6 +30,7 @@ import me.ryanhamshire.GriefPrevention.ShovelMode;
 import me.ryanhamshire.GriefPrevention.SiegeData;
 import me.ryanhamshire.GriefPrevention.Visualization;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -148,7 +149,7 @@ public class PlayerData
 		
 		long elapsed = now - this.lastPvpTimestamp;
 		
-		if(elapsed > GriefPrevention.instance.config_pvp_combatTimeoutSeconds * 1000) //X seconds
+		if(elapsed > Config.config_pvp_combatTimeoutSeconds * 1000) //X seconds
 		{
 			this.lastPvpTimestamp = 0;
 			return false;
@@ -226,15 +227,15 @@ public class PlayerData
                 this.accruedClaimBlocks = storageData.accruedClaimBlocks;
 
                 //ensure at least minimum accrued are accrued (in case of settings changes to increase initial amount)
-                if(GriefPrevention.instance.config_advanced_fixNegativeClaimblockAmounts && (this.accruedClaimBlocks < GriefPrevention.instance.config_claims_initialBlocks))
+                if(Config.config_advanced_fixNegativeClaimblockAmounts && (this.accruedClaimBlocks < Config.config_claims_initialBlocks))
                 {
-                    this.accruedClaimBlocks = GriefPrevention.instance.config_claims_initialBlocks;
+                    this.accruedClaimBlocks = Config.config_claims_initialBlocks;
                 }
                 
             }
             else
             {
-                this.accruedClaimBlocks = GriefPrevention.instance.config_claims_initialBlocks;
+                this.accruedClaimBlocks = Config.config_claims_initialBlocks;
             }
         }
         
@@ -280,7 +281,7 @@ public class PlayerData
             
             //if total claimed area is more than total blocks available
             int totalBlocks = this.accruedClaimBlocks + this.getBonusClaimBlocks() + GriefPrevention.instance.dataStore.getGroupBonusBlocks(this.playerID);
-            if(GriefPrevention.instance.config_advanced_fixNegativeClaimblockAmounts && totalBlocks < totalClaimsArea)
+            if(Config.config_advanced_fixNegativeClaimblockAmounts && totalBlocks < totalClaimsArea)
             {
                 OfflinePlayer player = GriefPrevention.instance.getServer().getOfflinePlayer(this.playerID);
                 GriefPrevention.AddLogEntry(player.getName() + " has more claimed land than blocks available.  Adding blocks to fix.", CustomLogEntryTypes.Debug, true);
@@ -336,7 +337,7 @@ public class PlayerData
     public int getAccruedClaimBlocksLimit()
     {
         if (this.AccruedClaimBlocksLimit < 0)
-            return GriefPrevention.instance.config_claims_maxAccruedBlocks_default;
+            return Config.config_claims_maxAccruedBlocks_default;
         return this.AccruedClaimBlocksLimit;
     }
 

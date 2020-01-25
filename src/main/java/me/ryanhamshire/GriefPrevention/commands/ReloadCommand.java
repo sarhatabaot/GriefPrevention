@@ -4,6 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import me.ryanhamshire.GriefPrevention.TextMode;
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,7 +16,7 @@ public class ReloadCommand extends GPBaseCommand{
 
 	@Default
 	public void onReload(final CommandSender player){
-		plugin.loadConfig();
+		Config.init(plugin);
 		if(player != null) {
 			GriefPrevention.sendMessage((Player) player, TextMode.Success, "Configuration updated.  If you have updated your Grief Prevention JAR, you still need to /reload or reboot your server.");
 		}

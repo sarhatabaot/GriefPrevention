@@ -18,6 +18,7 @@
  
  package me.ryanhamshire.GriefPrevention;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -51,7 +52,7 @@ class CleanupUnusedClaimPreTask implements Runnable
 	    
 	    //skip claims belonging to exempted players based on block totals in config
 	    int bonusBlocks = ownerData.getBonusClaimBlocks();
-	    if(bonusBlocks >= GriefPrevention.instance.config_claims_expirationExemptionBonusBlocks || bonusBlocks + ownerData.getAccruedClaimBlocks() >= GriefPrevention.instance.config_claims_expirationExemptionTotalBlocks)
+	    if(bonusBlocks >= Config.config_claims_expirationExemptionBonusBlocks || bonusBlocks + ownerData.getAccruedClaimBlocks() >= Config.config_claims_expirationExemptionTotalBlocks)
         {
             GriefPrevention.AddLogEntry("Player exempt from claim expiration based on claim block counts vs. config file settings.", CustomLogEntryTypes.Debug, true);
             return;

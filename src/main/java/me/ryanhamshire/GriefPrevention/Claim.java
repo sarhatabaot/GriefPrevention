@@ -20,6 +20,7 @@ package me.ryanhamshire.GriefPrevention;
 
 import java.util.*;
 
+import me.ryanhamshire.GriefPrevention.config.Config;
 import org.bukkit.*;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
@@ -446,9 +447,9 @@ public class Claim
 			boolean breakable = false;
 			
 			//search for block type in list of breakable blocks
-			for(int i = 0; i < GriefPrevention.instance.config_siege_blocks.size(); i++)
+			for(int i = 0; i < Config.config_siege_blocks.size(); i++)
 			{
-				Material breakableMaterial = GriefPrevention.instance.config_siege_blocks.get(i);
+				Material breakableMaterial = Config.config_siege_blocks.get(i);
 				if(breakableMaterial == material)
 				{
 					breakable = true;
