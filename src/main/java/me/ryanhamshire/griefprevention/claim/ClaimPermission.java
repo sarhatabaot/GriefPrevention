@@ -16,12 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-package me.ryanhamshire.griefprevention;
+package me.ryanhamshire.griefprevention.claim;
 
-//basic enum stuff
-public enum ClaimPermission 
-{
-	Build,
-	Inventory,
-	Access
+public enum ClaimPermission {
+	BUILD,
+	INVENTORY,
+	ACCESS
 }
