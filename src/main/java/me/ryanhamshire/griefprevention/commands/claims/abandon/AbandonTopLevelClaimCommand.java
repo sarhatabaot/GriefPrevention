@@ -1,4 +1,4 @@
-package me.ryanhamshire.griefprevention.commands.claims;
+package me.ryanhamshire.griefprevention.commands.claims.abandon;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
@@ -7,15 +7,16 @@ import me.ryanhamshire.griefprevention.GriefPrevention;
 import me.ryanhamshire.griefprevention.commands.GPBaseCommand;
 import org.bukkit.entity.Player;
 
-@CommandAlias("abandonclaim")
+@CommandAlias("abandontoplevelclaim")
 @CommandPermission("griefprevention.claims")
-public class AbandonClaimCommand extends GPBaseCommand {
-	public AbandonClaimCommand(final GriefPrevention plugin) {
+public class AbandonTopLevelClaimCommand extends AAbandonCommand {
+
+	public AbandonTopLevelClaimCommand(final GriefPrevention plugin) {
 		super(plugin);
 	}
 
 	@Default
-	public void onAbandonClaim(final Player player){
-		plugin.abandonClaimHandler(player, false);
+	public void onAbandonTopLevelClaim(final Player player){
+		abandonClaimHandler(player, true);
 	}
 }

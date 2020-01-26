@@ -1,4 +1,4 @@
-package me.ryanhamshire.griefprevention.commands.claims;
+package me.ryanhamshire.griefprevention.commands.claims.abandon;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;

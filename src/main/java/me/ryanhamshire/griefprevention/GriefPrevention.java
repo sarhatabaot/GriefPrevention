@@ -31,11 +31,17 @@ import java.util.regex.Pattern;
 
 import co.aikar.commands.BukkitCommandManager;
 import me.ryanhamshire.griefprevention.claim.Claim;
-import me.ryanhamshire.griefprevention.claim.ClaimPermission;
 import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.cleanup.FindUnusedClaimsTask;
 import me.ryanhamshire.griefprevention.commands.*;
 import me.ryanhamshire.griefprevention.commands.claims.*;
+<<<<<<< Updated upstream
+=======
+import me.ryanhamshire.griefprevention.commands.claims.abandon.AbandonAllClaimsCommand;
+import me.ryanhamshire.griefprevention.commands.claims.abandon.AbandonClaimCommand;
+import me.ryanhamshire.griefprevention.commands.claims.abandon.AbandonTopLevelClaimCommand;
+import me.ryanhamshire.griefprevention.commands.claims.trust.*;
+>>>>>>> Stashed changes
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.datastore.DatabaseDataStore;
