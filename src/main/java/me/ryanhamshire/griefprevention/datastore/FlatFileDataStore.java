@@ -54,14 +54,14 @@ public class FlatFileDataStore extends DataStore {
 	private static final String nextClaimIdFilePath = claimDataFolderPath + File.separator + "_nextClaimID";
 	private static final String schemaVersionFilePath = dataLayerFolderPath + File.separator + "_schemaVersion";
 
-	static boolean hasData() {
+	public static boolean hasData() {
 		File claimsDataFolder = new File(claimDataFolderPath);
 
 		return claimsDataFolder.exists();
 	}
 
 	//initialization!
-	FlatFileDataStore() throws Exception {
+	public FlatFileDataStore() throws Exception {
 		this.initialize();
 	}
 
@@ -688,7 +688,7 @@ public class FlatFileDataStore extends DataStore {
 		}
 	}
 
-	synchronized void migrateData(DatabaseDataStore databaseStore) {
+	public synchronized void migrateData(DatabaseDataStore databaseStore) {
 		//migrate claims
 		for (int i = 0; i < this.claims.size(); i++) {
 			Claim claim = this.claims.get(i);
@@ -757,7 +757,7 @@ public class FlatFileDataStore extends DataStore {
 	}
 
 	@Override
-	synchronized void close() {
+	public synchronized void close() {
 	}
 
 	@Override

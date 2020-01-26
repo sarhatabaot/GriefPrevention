@@ -88,7 +88,12 @@ public abstract class DataStore {
 
 	//path information, for where stuff stored on disk is well...  stored
 	protected static final String dataLayerFolderPath = "plugins" + File.separator + "GriefPreventionData";
-	static final String playerDataFolderPath = dataLayerFolderPath + File.separator + "PlayerData";
+
+	public static String getPlayerDataFolderPath() {
+		return playerDataFolderPath;
+	}
+
+	protected static final String playerDataFolderPath = dataLayerFolderPath + File.separator + "PlayerData";
 	static final String configFilePath = dataLayerFolderPath + File.separator + "config.yml";
 	static final String messagesFilePath = dataLayerFolderPath + File.separator + "messages.yml";
 	static final String softMuteFilePath = dataLayerFolderPath + File.separator + "softMute.txt";
@@ -1570,7 +1575,7 @@ public abstract class DataStore {
 		return resultNames;
 	}
 
-	abstract void close();
+	public abstract void close();
 
 	private class SavePlayerDataThread extends Thread {
 		private UUID playerID;

@@ -54,7 +54,7 @@ public class DatabaseDataStore extends DataStore
 	private String deleteSchemaVersionSQL;
 	private String selectSchemaVersionSQL;
 
-	DatabaseDataStore(String url, String userName, String password) throws Exception
+	public DatabaseDataStore(String url, String userName, String password) throws Exception
 	{
 		this.databaseUrl = url;
 		this.userName = userName;
@@ -597,7 +597,7 @@ public class DatabaseDataStore extends DataStore
 	}
 
 	@Override
-	synchronized void close()
+	public synchronized void close()
 	{
 		if(this.databaseConnection != null)
 		{

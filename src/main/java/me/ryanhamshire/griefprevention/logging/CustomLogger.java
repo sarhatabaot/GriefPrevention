@@ -89,7 +89,7 @@ public class CustomLogger {
 		return true;
 	}
 
-	void writeEntries() {
+	public void writeEntries() {
 		try {
 			//if nothing to write, stop here
 			if (this.queuedEntries.length() == 0) return;
