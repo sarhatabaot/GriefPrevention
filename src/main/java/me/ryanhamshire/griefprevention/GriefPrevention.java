@@ -36,12 +36,12 @@ import me.ryanhamshire.griefprevention.claim.ClaimsMode;
 import me.ryanhamshire.griefprevention.cleanup.FindUnusedClaimsTask;
 import me.ryanhamshire.griefprevention.commands.*;
 import me.ryanhamshire.griefprevention.commands.claims.*;
+import me.ryanhamshire.griefprevention.commands.claims.trust.*;
 import me.ryanhamshire.griefprevention.config.Config;
 import me.ryanhamshire.griefprevention.datastore.DataStore;
 import me.ryanhamshire.griefprevention.datastore.DatabaseDataStore;
 import me.ryanhamshire.griefprevention.datastore.FlatFileDataStore;
 import me.ryanhamshire.griefprevention.events.PreventBlockBreakEvent;
-import me.ryanhamshire.griefprevention.events.TrustChangedEvent;
 import me.ryanhamshire.griefprevention.logging.CustomLogEntryTypes;
 import me.ryanhamshire.griefprevention.logging.CustomLogger;
 import me.ryanhamshire.griefprevention.metrics.MetricsHandler;
@@ -401,141 +401,6 @@ public class GriefPrevention extends JavaPlugin {
 
 	}
 
-	//helper method keeps the trust commands consistent and eliminates duplicate code
-	public void handleTrustCommand(Player player, ClaimPermission permissionLevel, String recipientName) {
-		//determine which claim the player is standing in
-		Claim claim = this.dataStore.getClaimAt(player.getLocation(), true /*ignore height*/, null);
-
-		//validate player or group argument
-		String permission = null;
-		OfflinePlayer otherPlayer = null;
-		UUID recipientID = null;
-		if (recipientName.startsWith("[") && recipientName.endsWith("]")) {
-			permission = recipientName.substring(1, recipientName.length() - 1);
-			if (permission.isEmpty()) {
-				GriefPrevention.sendMessage(player, TextMode.Err, Messages.InvalidPermissionID);
-				return;
-			}
-		} else if (recipientName.contains(".")) {
-			permission = recipientName;
-		} else {
-			otherPlayer = this.resolvePlayerByName(recipientName);
-			if (otherPlayer == null && !recipientName.equals("public") && !recipientName.equals("all")) {
-				GriefPrevention.sendMessage(player, TextMode.Err, Messages.PlayerNotFound2);
-				return;
-			}
-
-			if (otherPlayer != null) {
-				recipientName = otherPlayer.getName();
-				recipientID = otherPlayer.getUniqueId();
-			} else {
-				recipientName = "public";
-			}
-		}
-
-		//determine which claims should be modified
-		ArrayList<Claim> targetClaims = new ArrayList<>();
-		if (claim == null) {
-			PlayerData playerData = this.dataStore.getPlayerData(player.getUniqueId());
-			targetClaims.addAll(playerData.getClaims());
-		} else {
-			//check permission here
-			if (claim.allowGrantPermission(player) != null) {
-				GriefPrevention.sendMessage(player, TextMode.Err, Messages.NoPermissionTrust, claim.getOwnerName());
-				return;
-			}
-
-			//see if the player has the level of permission he's trying to grant
-			String errorMessage = null;
-
-			//permission level null indicates granting permission trust
-			if (permissionLevel == null) {
-				errorMessage = claim.allowEdit(player);
-				if (errorMessage != null) {
-					errorMessage = "Only " + claim.getOwnerName() + " can grant /PermissionTrust here.";
-				}
-			}
-
-			//otherwise just use the ClaimPermission enum values
-			else {
-				switch (permissionLevel) {
-					case ACCESS:
-						errorMessage = claim.allowAccess(player);
-						break;
-					case INVENTORY:
-						errorMessage = claim.allowContainers(player);
-						break;
-					default:
-						errorMessage = claim.allowBuild(player, Material.AIR);
-				}
-			}
-
-			//error message for trying to grant a permission the player doesn't have
-			if (errorMessage != null) {
-				GriefPrevention.sendMessage(player, TextMode.Err, Messages.CantGrantThatPermission);
-				return;
-			}
-
-			targetClaims.add(claim);
-		}
-
-		//if we didn't determine which claims to modify, tell the player to be specific
-		if (targetClaims.isEmpty()) {
-			GriefPrevention.sendMessage(player, TextMode.Err, Messages.GrantPermissionNoClaim);
-			return;
-		}
-
-		String identifierToAdd = recipientName;
-		if (permission != null) {
-			identifierToAdd = "[" + permission + "]";
-		} else if (recipientID != null) {
-			identifierToAdd = recipientID.toString();
-		}
-
-		//calling the event
-		TrustChangedEvent event = new TrustChangedEvent(player, targetClaims, permissionLevel, true, identifierToAdd);
-		Bukkit.getPluginManager().callEvent(event);
-
-		if (event.isCancelled()) {
-			return;
-		}
-
-		//apply changes
-		for (Claim currentClaim : targetClaims) {
-			if (permissionLevel == null) {
-				if (!currentClaim.managers.contains(identifierToAdd)) {
-					currentClaim.managers.add(identifierToAdd);
-				}
-			} else {
-				currentClaim.setPermission(identifierToAdd, permissionLevel);
-			}
-			this.dataStore.saveClaim(currentClaim);
-		}
-
-		//notify player
-		if (recipientName.equals("public")) recipientName = this.dataStore.getMessage(Messages.CollectivePublic);
-		String permissionDescription;
-		if (permissionLevel == null) {
-			permissionDescription = this.dataStore.getMessage(Messages.PermissionsPermission);
-		} else if (permissionLevel == ClaimPermission.BUILD) {
-			permissionDescription = this.dataStore.getMessage(Messages.BuildPermission);
-		} else if (permissionLevel == ClaimPermission.ACCESS) {
-			permissionDescription = this.dataStore.getMessage(Messages.AccessPermission);
-		} else //ClaimPermission.Inventory
-		{
-			permissionDescription = this.dataStore.getMessage(Messages.ContainersPermission);
-		}
-
-		String location;
-		if (claim == null) {
-			location = this.dataStore.getMessage(Messages.LocationAllClaims);
-		} else {
-			location = this.dataStore.getMessage(Messages.LocationCurrentClaim);
-		}
-
-		GriefPrevention.sendMessage(player, TextMode.Success, Messages.GrantPermissionConfirmation, recipientName, permissionDescription, location);
-	}
-
 	//helper method to resolve a player by name
 	ConcurrentHashMap<String, UUID> playerNameToIDMap = new ConcurrentHashMap<>();
 
@@ -644,7 +509,7 @@ public class GriefPrevention extends JavaPlugin {
 		this.dataStore.close();
 
 		//dump any remaining unwritten log entries
-		this.customLogger.WriteEntries();
+		this.customLogger.writeEntries();
 
 		addLogEntry("GriefPrevention disabled.");
 	}
